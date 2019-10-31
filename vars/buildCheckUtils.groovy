@@ -9,9 +9,9 @@ import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
  * A class of methods used in the Jenkinsfile pipeline.
  * These methods are wrappers around methods in the packagepipelineUtils library.
  */
-class packagepipelineUtils implements Serializable {
+class buildCheckUtils implements Serializable {
 
-    def packagePipelineUtils = new PackagePipelineUtils()
+    def buildCheckUtils = new BuildCheckUtils()
     def contraUtils = new org.centos.contra.pipeline.Utils()
     def centosUtils = new org.centos.Utils()
 
