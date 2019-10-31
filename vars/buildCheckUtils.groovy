@@ -24,7 +24,7 @@ class buildCheckUtils implements Serializable {
      * @return
      */
     def setDistBranch(String branch) {
-        return packagePipelineUtils.setDistBranch(branch)
+        return buildCheckUtils.setDistBranch(branch)
     }
 
     /**
@@ -35,7 +35,7 @@ class buildCheckUtils implements Serializable {
      * @return
      */
     def setMessageFields(String messageType, String artifact, Map parsedMsg) {
-        packagePipelineUtils.setMessageFields(messageType, artifact, parsedMsg)
+        buildCheckUtils.setMessageFields(messageType, artifact, parsedMsg)
     }
 
     /**
@@ -47,7 +47,7 @@ class buildCheckUtils implements Serializable {
      * @return
      */
     def setTestMessageFields(String messageType, String artifact, Map parsedMsg) {
-        packagePipelineUtils.setTestMessageFields(messageType, artifact, parsedMsg)
+        buildCheckUtils.setTestMessageFields(messageType, artifact, parsedMsg)
     }
 
     /**
@@ -56,7 +56,7 @@ class buildCheckUtils implements Serializable {
      * @return
      */
     def setDefaultEnvVars(Map envMap = null) {
-        packagePipelineUtils.setDefaultEnvVars(envMap)
+        buildCheckUtils.setDefaultEnvVars(envMap)
     }
 
     /**
@@ -65,11 +65,11 @@ class buildCheckUtils implements Serializable {
      * @return
      */
     def setStageEnvVars(String stage) {
-        packagePipelineUtils.setStageEnvVars(stage)
+        buildCheckUtils.setStageEnvVars(stage)
     }
 
     def prepareCredentials(String credentials) {
-        packagePipelineUtils.prepareCredentials(credentials)
+        buildCheckUtils.prepareCredentials(credentials)
     }
 
     /**
@@ -78,12 +78,12 @@ class buildCheckUtils implements Serializable {
      * @param message trigger message
      */
     def watchForMessages(String msg_provider, String message) {
-        packagePipelineUtils.watchForMessages(msg_provider, message)
+        buildCheckUtils.watchForMessages(msg_provider, message)
     }
 
     def ciPipeline(Closure body) {
         try {
-            packagePipelineUtils.ciPipeline(body)
+            buildCheckUtils.ciPipeline(body)
         } catch(e) {
             throw e
         } // finally {
@@ -92,18 +92,18 @@ class buildCheckUtils implements Serializable {
     }
 
     def handlePipelineStep(Map config, Closure body) {
-        packagePipelineUtils.handlePipelineStep(config, body)
+        buildCheckUtils.handlePipelineStep(config, body)
     }
 
     // def timedPipelineStep(Map config, Closure body) {
     //    def measurement = timedMeasurement()
     //    cimetrics.timed measurement, config.stepName, {
-    //        packagePipelineUtils.handlePipelineStep(config, body)
+    //        buildCheckUtils.handlePipelineStep(config, body)
     //    }
     // }
 
     def timedMeasurement() {
-        return "${influxDBPrefix()}_${packagePipelineUtils.timedMeasurement()}"
+        return "${influxDBPrefix()}_${buildCheckUtils.timedMeasurement()}"
     }
 
     /**
@@ -112,7 +112,7 @@ class buildCheckUtils implements Serializable {
      * @return bool
      */
     def checkBranch(String branch) {
-        return packagePipelineUtils.checkBranch(branch)
+        return buildCheckUtils.checkBranch(branch)
     }
 
     def influxDBPrefix() {
@@ -185,7 +185,7 @@ class buildCheckUtils implements Serializable {
      * @return
      */
     def executeInContainer(Map parameters) {
-        packagePipelineUtils.executeInContainer(parameters)
+        buildCheckUtils.executeInContainer(parameters)
     }
 
     /**
@@ -250,7 +250,7 @@ class buildCheckUtils implements Serializable {
      * @return
      */
     def setScratchVars(Map parsedMsg) {
-        packagePipelineUtils.setScratchVars(parsedMsg)
+        buildCheckUtils.setScratchVars(parsedMsg)
     }
 
     /**
@@ -261,7 +261,7 @@ class buildCheckUtils implements Serializable {
     * @return
     */
     def sendPRCommentforTags(imageOperationsList) {
-        packagePipelineUtils.sendPRCommentforTags(imageOperationsList)
+        buildCheckUtils.sendPRCommentforTags(imageOperationsList)
     }
 
     /**
@@ -269,7 +269,7 @@ class buildCheckUtils implements Serializable {
      * @param map
      */
     def printLabelMap(map) {
-        packagePipelineUtils.printLabelMap(map)
+        buildCheckUtils.printLabelMap(map)
     }
 
     /**
@@ -278,18 +278,18 @@ class buildCheckUtils implements Serializable {
      * @return
      */
     def setupContainerTemplates(String openshiftProject) {
-        packagePipelineUtils.setupContainerTemplates(openshiftProject)
+        buildCheckUtils.setupContainerTemplates(openshiftProject)
     }
 
     def downloadCompose(Map parameters = [:]) {
-        packagePipelineUtils.downloadCompose(parameters)
+        buildCheckUtils.downloadCompose(parameters)
     }
 
     def resizeCompose(Map parameters = [:]) {
-        packagePipelineUtils.resizeCompose(parameters)
+        buildCheckUtils.resizeCompose(parameters)
     }
 
     def testCompose(Map parameters = [:]) {
-        packagePipelineUtils.testCompose(parameters)
+        buildCheckUtils.testCompose(parameters)
     }
 }
