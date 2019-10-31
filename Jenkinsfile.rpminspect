@@ -6,7 +6,7 @@ timestamps {
 
     // Initialize all the ghprb variables we need
     env.ghprbGhRepository = env.ghprbGhRepository ?: 'tflink/fedora-ci-generic-checks'
-    env.ghprbActualCommit = env.ghprbActualCommit ?: 'copy-pasta-ftw'
+    env.ghprbActualCommit = env.ghprbActualCommit ?: 'master'
     env.ghprbPullAuthorLogin = env.ghprbPullAuthorLogin ?: ''
     env.ghprbPullId = env.ghprbPullId ?: ''
 
@@ -31,8 +31,7 @@ timestamps {
     runnerCpuLimit = '1'
 
     def libraries = ['cico-pipeline'           : ['master', 'https://github.com/CentOS/cico-pipeline-library.git'],
-                     'contra-lib'              : ['master', 'https://github.com/openshift/contra-lib.git'],
-                     'upstream-pipeline'       : ['master', 'https://github.com/CentOS-PaaS-SIG/upstream-fedora-pipeline.git']] // should probably pin this to a release
+                     'contra-lib'              : ['master', 'https://github.com/openshift/contra-lib.git']] // should probably pin this to a release
 
     libraries.each { name, repo ->
         library identifier: "${name}@${repo[0]}",
