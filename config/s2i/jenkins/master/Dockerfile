@@ -1,12 +1,5 @@
 FROM centos
 
-LABEL io.k8s.description="Jenkins is a continuous integration server" \
-      io.k8s.display-name="Jenkins 2" \
-      io.openshift.tags="jenkins,jenkins2,ci" \
-      io.openshift.expose-services="8080:http" \
-      io.jenkins.version="2.176.4" \
-      io.openshift.s2i.scripts-url=image:///usr/libexec/s2i
-
 RUN yum update -y && yum install -y epel-release && yum install -y git curl dpkg java java-devel unzip which && yum clean all
 ENV JAVA_HOME /etc/alternatives/jre_openjdk
 
@@ -18,10 +11,19 @@ ARG http_port=8080
 ARG agent_port=50000
 ARG JENKINS_HOME=/var/jenkins_home
 ARG REF=/usr/share/jenkins/ref
+ARG JENKINS_VERSION=2.150.2
 
 ENV JENKINS_HOME $JENKINS_HOME
 ENV JENKINS_SLAVE_AGENT_PORT ${agent_port}
 ENV REF $REF
+
+LABEL io.k8s.description="Jenkins is a continuous integration server" \
+      io.k8s.display-name="Jenkins 2" \
+      io.openshift.tags="jenkins,jenkins2,ci" \
+      io.openshift.expose-services="8080:http" \
+      io.jenkins.version="$JENKINS_VERSION" \
+      io.openshift.s2i.scripts-url=image:///usr/libexec/s2i
+
 
 # Jenkins is run with user `jenkins`, uid = 1000
 # If you bind mount a volume from the host or a data container,
@@ -49,10 +51,6 @@ RUN curl -fsSL https://github.com/krallin/tini/releases/download/${TINI_VERSION}
   && gpg --verify /sbin/tini.asc \
   && rm -rf /sbin/tini.asc /root/.gnupg \
   && chmod +x /sbin/tini
-
-# jenkins version being bundled in this docker image
-ARG JENKINS_VERSION
-ENV JENKINS_VERSION ${JENKINS_VERSION:-2.150.2}
 
 # jenkins.war checksum, download will be validated using it
 ARG JENKINS_SHA=fab70f4e209855e0806315cc419e0cbbbf1bd9b31c6f221f7702aa21145040f8
@@ -86,6 +84,14 @@ COPY tini-shim.sh /bin/tini
 # from a derived Dockerfile, can use `RUN plugins.sh active.txt` to setup $REF/plugins from a support bundle
 COPY plugins.sh /usr/local/bin/plugins.sh
 COPY install-plugins.sh /usr/local/bin/install-plugins.sh
+
+
+# more stuff from openshift jenkins
+COPY ./contrib/openshift /opt/openshift
+COPY ./contrib/jenkins /usr/local/bin
+ADD ./contrib/s2i /usr/libexec/s2i
+ADD release.version /tmp/release.version
+
 
 RUN /usr/local/bin/install-jenkins-core-plugins.sh /opt/openshift/base-plugins.txt && \
     rmdir /var/log/jenkins && \
