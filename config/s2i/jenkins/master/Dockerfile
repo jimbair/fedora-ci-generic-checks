@@ -17,7 +17,7 @@ ARG http_port=8080
 ARG agent_port=50000
 ARG JENKINS_HOME=/var/lib/jenkins
 ARG REF=/usr/share/jenkins/ref
-ARG JENKINS_VERSION=2.150.2
+ARG JENKINS_VERSION=2.150.3
 
 ENV JENKINS_HOME $JENKINS_HOME
 ENV HOME $JENKINS_HOME
@@ -55,10 +55,10 @@ RUN curl -fsSL https://github.com/krallin/tini/releases/download/${TINI_VERSION}
   && rm -rf /sbin/tini.asc /root/.gnupg \
   && chmod +x /sbin/tini
 
-ENV JENKINS_VERSION ${JENKINS_VERSION:-2.150.2}
+ENV JENKINS_VERSION ${JENKINS_VERSION:-2.150.3}
 
 # jenkins.war checksum, download will be validated using it
-ARG JENKINS_SHA=fab70f4e209855e0806315cc419e0cbbbf1bd9b31c6f221f7702aa21145040f8
+ARG JENKINS_SHA=4fc2700a27a6ccc53da9d45cc8b2abd41951b361e562e1a1ead851bea61630fd
 
 # Can be used to customize where jenkins.war get downloaded from
 ARG JENKINS_URL=https://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-war/${JENKINS_VERSION}/jenkins-war-${JENKINS_VERSION}.war
