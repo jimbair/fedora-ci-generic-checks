@@ -1,5 +1,12 @@
 FROM centos
 
+LABEL io.k8s.description="Jenkins is a continuous integration server" \
+      io.k8s.display-name="Jenkins 2" \
+      io.openshift.tags="jenkins,jenkins2,ci" \
+      io.openshift.expose-services="8080:http" \
+      io.jenkins.version="2.176.4" \
+      io.openshift.s2i.scripts-url=image:///usr/libexec/s2i
+
 RUN yum update -y && yum install -y epel-release && yum install -y git curl dpkg java java-devel unzip which && yum clean all
 ENV JAVA_HOME /etc/alternatives/jre_openjdk
 
@@ -71,13 +78,49 @@ EXPOSE ${agent_port}
 
 ENV COPY_REFERENCE_FILE_LOG $JENKINS_HOME/copy_reference_file.log
 
-USER ${user}
 
 COPY jenkins-support /usr/local/bin/jenkins-support
 COPY jenkins.sh /usr/local/bin/jenkins.sh
 COPY tini-shim.sh /bin/tini
-ENTRYPOINT ["/sbin/tini", "--", "/usr/local/bin/jenkins.sh"]
 
 # from a derived Dockerfile, can use `RUN plugins.sh active.txt` to setup $REF/plugins from a support bundle
 COPY plugins.sh /usr/local/bin/plugins.sh
 COPY install-plugins.sh /usr/local/bin/install-plugins.sh
+
+RUN /usr/local/bin/install-jenkins-core-plugins.sh /opt/openshift/base-plugins.txt && \
+    rmdir /var/log/jenkins && \
+    chmod 664 /etc/passwd && \
+    chmod -R 775 /etc/alternatives && \
+    chmod -R 775 /var/lib/alternatives && \
+    chmod -R 775 /usr/lib/jvm && \
+    chmod 775 /usr/bin && \
+    chmod 775 /usr/lib/jvm-exports && \
+    chmod 775 /usr/share/man/man1 && \
+    mkdir -p /var/lib/origin && \
+    chmod 775 /var/lib/origin && \
+    unlink /usr/bin/java && \
+    unlink /usr/bin/jjs && \
+    unlink /usr/bin/keytool && \
+    unlink /usr/bin/pack200 && \
+    unlink /usr/bin/rmid && \
+    unlink /usr/bin/rmiregistry && \
+    unlink /usr/bin/unpack200 && \
+    unlink /usr/share/man/man1/java.1.gz && \
+    unlink /usr/share/man/man1/jjs.1.gz && \
+    unlink /usr/share/man/man1/keytool.1.gz && \
+    unlink /usr/share/man/man1/pack200.1.gz && \
+    unlink /usr/share/man/man1/rmid.1.gz && \
+    unlink /usr/share/man/man1/rmiregistry.1.gz && \
+    unlink /usr/share/man/man1/unpack200.1.gz && \
+    chown -R 1001:0 /opt/openshift && \
+    /usr/local/bin/fix-permissions /opt/openshift && \
+    /usr/local/bin/fix-permissions /opt/openshift/configuration/init.groovy.d && \
+    /usr/local/bin/fix-permissions /var/lib/jenkins && \
+    /usr/local/bin/fix-permissions /var/log
+
+VOLUME ["/var/lib/jenkins"]
+
+USER 1001
+ENTRYPOINT ["/usr/bin/go-init", "-main", "/usr/libexec/s2i/run"]
+
+kk
