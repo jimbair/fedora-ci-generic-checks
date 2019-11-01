@@ -261,7 +261,7 @@ parameters:
 - description: Git source URI for Jenkins S2I
   name: REPO_URL
   required: true
-  value: https://pagure.io/fedora-ci-generic-checks.git
+  value: https://github.com/tflink/fedora-ci-generic-checks.git
 - description: Git branch/tag reference
   name: REPO_REF
   value: develop
