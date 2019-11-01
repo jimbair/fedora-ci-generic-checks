@@ -133,4 +133,4 @@ RUN chmod 664 /etc/passwd && \
 VOLUME ["/var/lib/jenkins"]
 
 USER 1001
-ENTRYPOINT ["/usr/bin/go-init", "-main", "/usr/libexec/s2i/run"]
+ENTRYPOINT ["/sbin/tini", "--", "/usr/local/bin/jenkins.sh"]
