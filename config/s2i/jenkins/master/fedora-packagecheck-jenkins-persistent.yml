@@ -264,5 +264,5 @@ parameters:
   value: https://pagure.io/fedora-ci-generic-checks.git
 - description: Git branch/tag reference
   name: REPO_REF
-  value: master
+  value: develop
 
