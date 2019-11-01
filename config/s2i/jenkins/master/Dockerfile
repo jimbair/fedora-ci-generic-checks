@@ -1,4 +1,4 @@
-FROM centos7
+FROM centos:7
 
 ENV JENKINS_UC=https://updates.jenkins.io \
     OPENSHIFT_JENKINS_IMAGE_VERSION=4.0 \
