@@ -1,5 +1,11 @@
 FROM centos
 
+ENV JENKINS_UC=https://updates.jenkins.io \
+    OPENSHIFT_JENKINS_IMAGE_VERSION=4.0 \
+    LANG=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8 \
+    INSTALL_JENKINS_VIA_RPMS=false
+
 RUN yum update -y && yum install -y epel-release && yum install -y git curl dpkg java java-devel unzip which && yum clean all
 ENV JAVA_HOME /etc/alternatives/jre_openjdk
 
@@ -9,11 +15,12 @@ ARG uid=1000
 ARG gid=1000
 ARG http_port=8080
 ARG agent_port=50000
-ARG JENKINS_HOME=/var/jenkins_home
+ARG JENKINS_HOME=/var/lib/jenkins
 ARG REF=/usr/share/jenkins/ref
 ARG JENKINS_VERSION=2.150.2
 
 ENV JENKINS_HOME $JENKINS_HOME
+ENV HOME $JENKINS_HOME
 ENV JENKINS_SLAVE_AGENT_PORT ${agent_port}
 ENV REF $REF
 
@@ -51,6 +58,8 @@ RUN curl -fsSL https://github.com/krallin/tini/releases/download/${TINI_VERSION}
   && gpg --verify /sbin/tini.asc \
   && rm -rf /sbin/tini.asc /root/.gnupg \
   && chmod +x /sbin/tini
+
+ENV JENKINS_VERSION ${JENKINS_VERSION:-2.150.2}
 
 # jenkins.war checksum, download will be validated using it
 ARG JENKINS_SHA=fab70f4e209855e0806315cc419e0cbbbf1bd9b31c6f221f7702aa21145040f8
@@ -93,8 +102,7 @@ ADD ./contrib/s2i /usr/libexec/s2i
 ADD release.version /tmp/release.version
 
 
-RUN /usr/local/bin/install-jenkins-core-plugins.sh /opt/openshift/base-plugins.txt && \
-    rmdir /var/log/jenkins && \
+RUN rmdir /var/log/jenkins && \
     chmod 664 /etc/passwd && \
     chmod -R 775 /etc/alternatives && \
     chmod -R 775 /var/lib/alternatives && \
@@ -128,5 +136,3 @@ VOLUME ["/var/lib/jenkins"]
 
 USER 1001
 ENTRYPOINT ["/usr/bin/go-init", "-main", "/usr/libexec/s2i/run"]
-
-kk
