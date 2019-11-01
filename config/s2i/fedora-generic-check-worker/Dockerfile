@@ -24,7 +24,7 @@ RUN dnf -y install ansible \
         file \
         findutils \
         git \
-        libselinux-python \
+        python3-libselinux \
         python3-dnf \
         python3-devel \
         python3-pyyaml \
