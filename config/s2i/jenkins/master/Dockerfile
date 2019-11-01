@@ -102,13 +102,11 @@ ADD ./contrib/s2i /usr/libexec/s2i
 ADD release.version /tmp/release.version
 
 
-RUN rmdir /var/log/jenkins && \
-    chmod 664 /etc/passwd && \
+RUN chmod 664 /etc/passwd && \
     chmod -R 775 /etc/alternatives && \
     chmod -R 775 /var/lib/alternatives && \
     chmod -R 775 /usr/lib/jvm && \
     chmod 775 /usr/bin && \
-    chmod 775 /usr/lib/jvm-exports && \
     chmod 775 /usr/share/man/man1 && \
     mkdir -p /var/lib/origin && \
     chmod 775 /var/lib/origin && \
