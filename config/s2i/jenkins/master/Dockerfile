@@ -106,20 +106,6 @@ RUN chmod 664 /etc/passwd && \
     chmod 775 /usr/share/man/man1 && \
     mkdir -p /var/lib/origin && \
     chmod 775 /var/lib/origin && \
-    unlink /usr/bin/java && \
-    unlink /usr/bin/jjs && \
-    unlink /usr/bin/keytool && \
-    unlink /usr/bin/pack200 && \
-    unlink /usr/bin/rmid && \
-    unlink /usr/bin/rmiregistry && \
-    unlink /usr/bin/unpack200 && \
-    unlink /usr/share/man/man1/java.1.gz && \
-    unlink /usr/share/man/man1/jjs.1.gz && \
-    unlink /usr/share/man/man1/keytool.1.gz && \
-    unlink /usr/share/man/man1/pack200.1.gz && \
-    unlink /usr/share/man/man1/rmid.1.gz && \
-    unlink /usr/share/man/man1/rmiregistry.1.gz && \
-    unlink /usr/share/man/man1/unpack200.1.gz && \
     chown -R 1001:0 /opt/openshift && \
     /usr/local/bin/fix-permissions /opt/openshift && \
     /usr/local/bin/fix-permissions /opt/openshift/configuration/init.groovy.d && \
