@@ -74,12 +74,8 @@ objects:
       secrets: []
       type: Git
     strategy:
-      sourceStrategy:
-        from:
-          kind: ImageStreamTag
-          name: jenkins:latest
-          namespace: openshift
-      type: Source
+      dockerStrategy:
+      type: Docker
     triggers:
     - type: ConfigChange
     - imageChange: {}
