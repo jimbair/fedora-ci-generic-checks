@@ -117,7 +117,7 @@ def setMessageFields(String messageType, String artifact, Map parsedMsg) {
 def setTestMessageFields(String messageType, String artifact, Map parsedMsg) {
     // See https://pagure.io/fedora-ci/messages or
     // https://github.com/openshift/contra-lib/tree/master/resources
-    myTopic = "${MAIN_TOPIC}.ci.${artifact}.test.${messageType}"
+    myTopic = "${env.MAIN_TOPIC}.ci.${artifact}.test.${messageType}"
     print("Topic is " + myTopic)
     myNamespace = "fedora-ci." + artifact
     myResult = currentBuild.currentResult
