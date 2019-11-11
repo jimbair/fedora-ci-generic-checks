@@ -44,7 +44,7 @@ def setDistBranch(String branch) {
  */
 def setMessageFields(String messageType, String artifact, Map parsedMsg) {
     //topic = "${MAIN_TOPIC}.ci.pipeline.allpackages-${artifact}.${messageType}"
-    topic = "${MAIN_TOPIC}.ci.${messageType}"
+    topic = "${env.MAIN_TOPIC}.ci.${messageType}"
     print("Topic is " + topic)
 
     // Create a HashMap of default message content keys and values
