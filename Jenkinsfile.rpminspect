@@ -242,7 +242,7 @@ timestamps {
                                 stageVars = buildCheckUtils.setStageEnvVars(env.currentStage)
 
                                 // Return a map (messageFields) of our message topic, properties, and content
-                                messageFields = buildCheckUtils.setTestMessageFields("package.running", artifactOld, parsedMsg)
+                                messageFields = buildCheckUtils.setTestMessageFields("package.running", artifact, parsedMsg)
 
                                 // Send message org.centos.prod.ci.pipeline.allpackages.package.running on fedmsg
                                 buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
@@ -302,13 +302,13 @@ timestamps {
                             }
 
                             // Set our message topic, properties, and content
-                            messageFields = buildCheckUtils.setTestMessageFields("package.complete", artifactOld, parsedMsg)
+                            messageFields = buildCheckUtils.setTestMessageFields("package.complete", artifact, parsedMsg)
 
                             // Send message org.centos.prod.ci.pipeline.allpackages.package.complete on fedmsg
                             buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
 
                             // Set our message topic, properties, and content
-                            messageFields = buildCheckUtils.setTestMessageFields("image.queued", artifactOld, parsedMsg)
+                            messageFields = buildCheckUtils.setTestMessageFields("image.queued", artifact, parsedMsg)
 
                             // Send message org.centos.prod.ci.pipeline.allpackages.image.queued on fedmsg
                             buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
@@ -320,7 +320,7 @@ timestamps {
                             buildCheckUtils.handlePipelineStep(stepName: env.currentStage, debug: true) {
 
                                 // Set our message topic, properties, and content
-                                messageFields = buildCheckUtils.setTestMessageFields("image.running", artifactOld, parsedMsg)
+                                messageFields = buildCheckUtils.setTestMessageFields("image.running", artifact, parsedMsg)
 
                                 // Send message org.centos.prod.ci.pipeline.allpackages.image.running on fedmsg
                                 buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
@@ -338,7 +338,7 @@ timestamps {
                                                                         stageName: env.currentStage)
 
                                 // Set our message topic, properties, and content
-                                messageFields = buildCheckUtils.setTestMessageFields("image.complete", artifactOld, parsedMsg)
+                                messageFields = buildCheckUtils.setTestMessageFields("image.complete", artifact, parsedMsg)
 
                                 // Send message org.centos.prod.ci.pipeline.allpackages.image.complete on fedmsg
                                 buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
@@ -376,7 +376,7 @@ timestamps {
                             } else {
                                 buildCheckUtils.handlePipelineStep(stepName: env.currentStage, debug: true) {
                                     // Set our message topic, properties, and content
-                                    messageFields = buildCheckUtils.setTestMessageFields("package.test.functional.queued", artifactOld, parsedMsg)
+                                    messageFields = buildCheckUtils.setTestMessageFields("package.test.functional.queued", artifact, parsedMsg)
 
                                     // Send message org.centos.prod.ci.pipeline.allpackages.package.test.functional.queued on fedmsg
                                     buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
@@ -385,7 +385,7 @@ timestamps {
                                     stageVars = buildCheckUtils.setStageEnvVars(env.currentStage)
 
                                     // Set our message topic, properties, and content
-                                    messageFields = buildCheckUtils.setTestMessageFields("package.test.functional.running", artifactOld, parsedMsg)
+                                    messageFields = buildCheckUtils.setTestMessageFields("package.test.functional.running", artifact, parsedMsg)
 
                                     // Send message org.centos.prod.ci.pipeline.allpackages.package.test.functional.running on fedmsg
                                     buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
@@ -432,7 +432,7 @@ timestamps {
                                     }
 
                                     // Set our message topic, properties, and content
-                                    messageFields = buildCheckUtils.setTestMessageFields("package.test.functional.complete", artifactOld, parsedMsg)
+                                    messageFields = buildCheckUtils.setTestMessageFields("package.test.functional.complete", artifact, parsedMsg)
 
                                     // Send message org.centos.prod.ci.pipeline.allpackages.package.test.functional.complete on fedmsg
                                     buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
@@ -454,7 +454,7 @@ timestamps {
                         currentBuild.result = buildResult
 
                         // Send message org.centos.prod.ci.pipeline.allpackages.<stage>.complete on fedmsg if stage failed
-                        messageFields = buildCheckUtils.setTestMessageFields(messageStage, artifactOld, parsedMsg)
+                        messageFields = buildCheckUtils.setTestMessageFields(messageStage, artifact, parsedMsg)
                         buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
 
                         // Send message org.centos.prod.ci.<artifact>.test.error on fedmsg
@@ -477,7 +477,7 @@ timestamps {
                         }
 
                         // Set our message topic, properties, and content
-                        messageFields = buildCheckUtils.setTestMessageFields("complete", artifactOld, parsedMsg)
+                        messageFields = buildCheckUtils.setTestMessageFields("complete", artifact, parsedMsg)
 
                         // Send message org.centos.prod.ci.pipeline.allpackages.complete on fedmsg
                         buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
