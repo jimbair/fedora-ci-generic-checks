@@ -119,6 +119,8 @@ def setTestMessageFields(String messageType, String artifact, Map parsedMsg) {
     // https://github.com/openshift/contra-lib/tree/master/resources
     myTopic = "${env.MAIN_TOPIC}.ci.${artifact}.test.${messageType}"
     print("Topic is " + myTopic)
+    print("artifact when setting message fields is " + artifact)
+
     myNamespace = "fedora-ci." + artifact
     myResult = currentBuild.currentResult
     // convert some build Result to valid spec result
