@@ -226,7 +226,7 @@ def setTestMessageFields(String messageType, String artifact, Map parsedMsg) {
             break
     }
 
-    return [ 'topic': myTopic, 'properties': '', 'content': myConstructedMessage() ]
+    return [ 'topic': myTopic, 'properties': '', 'content': myConstructedMessage ]
 }
 
 /**
