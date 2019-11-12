@@ -120,6 +120,7 @@ def setTestMessageFields(String messageType, String artifact, Map parsedMsg) {
     myTopic = "${env.MAIN_TOPIC}.ci.${artifact}.test.${messageType}"
     print("Topic is " + myTopic)
     print("artifact when setting message fields is " + artifact)
+    print("messageType is " + messageType)
 
     myNamespace = "fedora-ci." + artifact
     myResult = currentBuild.currentResult
