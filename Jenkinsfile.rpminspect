@@ -454,7 +454,7 @@ timestamps {
                         currentBuild.result = buildResult
 
                         // Send message org.centos.prod.ci.pipeline.allpackages.<stage>.complete on fedmsg if stage failed
-                        messageFields = buildCheckUtils.setTestMessageFields(messageStage, artifact, parsedMsg)
+                        messageFields = buildCheckUtils.setTestMessageFields(env.messageStage, artifact, parsedMsg)
                         buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
 
                         // Send message org.centos.prod.ci.<artifact>.test.error on fedmsg
