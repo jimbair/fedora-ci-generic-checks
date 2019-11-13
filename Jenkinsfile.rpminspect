@@ -222,7 +222,8 @@ timestamps {
                                 buildCheckUtils.setDefaultEnvVars()
 
                                 // Prepare Credentials (keys, passwords, etc)
-                                buildCheckUtils.prepareCredentials('fedora-keytab')
+                                // I don't think that we need this for our particular usecase and it's causing problems, disabling
+                                // buildCheckUtils.prepareCredentials('fedora-keytab')
 
                                 // Gather some info about the node we are running on for diagnostics
                                 buildCheckUtils.verifyPod(OPENSHIFT_NAMESPACE, env.NODE_NAME)
