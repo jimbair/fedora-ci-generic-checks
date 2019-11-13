@@ -22,6 +22,9 @@ timestamps {
     env.SLAVE_TAG = env.SLAVE_TAG ?: 'stable'
     env.FEDORACI_RUNNER_TAG = env.FEDORACI_RUNNER_TAG ?: 'stable'
 
+    // send staging messages
+    env.MSG_PROVIDER = "fedora-fedmsg-stage"
+
     // Execution ID for this run of the pipeline
     def executionID = UUID.randomUUID().toString()
     env.pipelineId = env.pipelineId ?: executionID
