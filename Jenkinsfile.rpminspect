@@ -234,140 +234,140 @@ timestamps {
                             }
                         }
 
-                        // Set our current stage value
-                        env.currentStage = "koji-build"
-                        stage(env.currentStage) {
-
-                            // Set stage specific vars
-                            buildCheckUtils.handlePipelineStep('stepName': env.currentStage, 'debug': true) {
-                                stageVars = buildCheckUtils.setStageEnvVars(env.currentStage)
-
-                                // Return a map (messageFields) of our message topic, properties, and content
-                                messageFields = buildCheckUtils.setTestMessageFields("package.running", artifact, parsedMsg)
-
-                                // Send message org.centos.prod.ci.pipeline.allpackages.package.running on fedmsg
-                                buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
-
-                                // Prepare to send stage.complete message on failure
-                                env.messageStage = 'package.complete'
-
-                                // Get DistBranch value to find rpm NVR
-                                env.DIST_BRANCH = buildCheckUtils.setDistBranch(env.branch)
-                                stageVars['DIST_BRANCH'] = env.DIST_BRANCH
-
-                                // If a task id was provided, use those artifacts and
-                                // bypass submitting a new rpm build
-                                if (env.PROVIDED_KOJI_TASKID?.trim()) {
-                                    stageVars['PROVIDED_KOJI_TASKID'] = env.PROVIDED_KOJI_TASKID
-                                    // Run script that simply downloads artifacts
-                                    // and stores them in jenkins workspace
-                                    buildCheckUtils.executeInContainer(containerName: "package-checks",
-                                                                            containerScript: "/tmp/pull_old_task.sh",
-                                                                            stageVars: stageVars,
-                                                                            stageName: env.currentStage)
-                                } else {
-                                    // For tests namespace there is no package to build
-                                    if (env.fed_namespace != "tests" ) {
-                                        // koji_build_pr relies on fed_uid var
-                                        stageVars['fed_uid'] = parsedMsg['pullrequest']['uid']
-                                        // Build rpms
-                                        buildCheckUtils.executeInContainer(containerName: "package-checks",
-                                                                                containerScript: "/tmp/koji_build_pr.sh",
-                                                                                stageVars: stageVars,
-                                                                                stageName: env.currentStage)
-                                    }
-                                }
-
-                                // Inject variables
-                                def job_props = "${env.WORKSPACE}/" + env.currentStage + "/logs/job.props"
-                                if (fileExists(job_props)) {
-                                     def job_props_groovy = "${env.WORKSPACE}/job.props.groovy"
-                                     buildCheckUtils.convertProps(job_props, job_props_groovy)
-                                     load(job_props_groovy)
-
-                                    // Make sure we generated a good repo
-                                    buildCheckUtils.executeInContainer(containerName: "package-checks",
-                                                                            containerScript: "/tmp/repoquery.sh",
-                                                                            stageVars: stageVars,
-                                                                            stageName: env.currentStage)
-                                }
-                            }
-
-                            if (env.PROVIDED_KOJI_TASKID?.trim()) {
-                                // Check if to add scratch tag to build name
-                                String scratchTag = env.isScratch.toBoolean() ? ":S" : ""
-                                // Decorate our build to not be null now
-                                String buildName = "${env.koji_task_id}${scratchTag}:${env.nvr}"
-                                currentBuild.displayName = buildName
-                                currentBuild.description = buildName
-                            }
-
-                            // Set our message topic, properties, and content
-                            messageFields = buildCheckUtils.setTestMessageFields("package.complete", artifact, parsedMsg)
-
-                            // Send message org.centos.prod.ci.pipeline.allpackages.package.complete on fedmsg
-                            buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
-
-                            // Set our message topic, properties, and content
-                            messageFields = buildCheckUtils.setTestMessageFields("image.queued", artifact, parsedMsg)
-
-                            // Send message org.centos.prod.ci.pipeline.allpackages.image.queued on fedmsg
-                            buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
-                        }
-
-                        env.currentStage = "cloud-image-compose"
-                        stage(env.currentStage) {
-
-                            buildCheckUtils.handlePipelineStep(stepName: env.currentStage, debug: true) {
-
-                                // Set our message topic, properties, and content
-                                messageFields = buildCheckUtils.setTestMessageFields("image.running", artifact, parsedMsg)
-
-                                // Send message org.centos.prod.ci.pipeline.allpackages.image.running on fedmsg
-                                buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
-
-                                // Set stage specific vars
-                                stageVars = buildCheckUtils.setStageEnvVars(env.currentStage)
-
-                                // Prepare to send stage.complete message on failure
-                                env.messageStage = 'image.complete'
-
-                                // Compose image
-                                buildCheckUtils.executeInContainer(containerName: "package-checks",
-                                                                        containerScript: "/tmp/virt-customize.sh",
-                                                                        stageVars: stageVars,
-                                                                        stageName: env.currentStage)
-
-                                // Set our message topic, properties, and content
-                                messageFields = buildCheckUtils.setTestMessageFields("image.complete", artifact, parsedMsg)
-
-                                // Send message org.centos.prod.ci.pipeline.allpackages.image.complete on fedmsg
-                                buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
-
-                            }
-                        }
-
-                        env.currentStage = "nvr-verify"
-                        stage(env.currentStage) {
-
-                            buildCheckUtils.handlePipelineStep(stepName: env.currentStage, debug: true) {
-                                // Set stage specific vars
-                                stageVars = buildCheckUtils.setStageEnvVars(currentStage)
-
-                                // This can't be in setStageEnvVars because it depends on env.WORKSPACE
-                                stageVars['TEST_SUBJECTS'] = "${env.WORKSPACE}/images/test_subject.qcow2"
-                                stageVars['TEST_LOCATION'] = "${env.PAGURE_URL}/${env.fed_namespace}/${env.fed_repo}"
-
-                                // tests namespace does not install any package, so do no need to verify rpm
-                                if (env.fed_namespace != "tests" ) {
-                                    // Run nvr verification
-                                    buildCheckUtils.executeInContainer(containerName: "package-checks",
-                                                                            containerScript: "/tmp/verify-rpm.sh",
-                                                                            stageVars: stageVars,
-                                                                            stageName: env.currentStage)
-                                }
-                            }
-                        }
+//                        // Set our current stage value
+//                        env.currentStage = "koji-build"
+//                        stage(env.currentStage) {
+//
+//                            // Set stage specific vars
+//                            buildCheckUtils.handlePipelineStep('stepName': env.currentStage, 'debug': true) {
+//                                stageVars = buildCheckUtils.setStageEnvVars(env.currentStage)
+//
+//                                // Return a map (messageFields) of our message topic, properties, and content
+//                                messageFields = buildCheckUtils.setTestMessageFields("package.running", artifact, parsedMsg)
+//
+//                                // Send message org.centos.prod.ci.pipeline.allpackages.package.running on fedmsg
+//                                buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
+//
+//                                // Prepare to send stage.complete message on failure
+//                                env.messageStage = 'package.complete'
+//
+//                                // Get DistBranch value to find rpm NVR
+//                                env.DIST_BRANCH = buildCheckUtils.setDistBranch(env.branch)
+//                                stageVars['DIST_BRANCH'] = env.DIST_BRANCH
+//
+//                                // If a task id was provided, use those artifacts and
+//                                // bypass submitting a new rpm build
+//                                if (env.PROVIDED_KOJI_TASKID?.trim()) {
+//                                    stageVars['PROVIDED_KOJI_TASKID'] = env.PROVIDED_KOJI_TASKID
+//                                    // Run script that simply downloads artifacts
+//                                    // and stores them in jenkins workspace
+//                                    buildCheckUtils.executeInContainer(containerName: "package-checks",
+//                                                                            containerScript: "/tmp/pull_old_task.sh",
+//                                                                            stageVars: stageVars,
+//                                                                            stageName: env.currentStage)
+//                                } else {
+//                                    // For tests namespace there is no package to build
+//                                    if (env.fed_namespace != "tests" ) {
+//                                        // koji_build_pr relies on fed_uid var
+//                                        stageVars['fed_uid'] = parsedMsg['pullrequest']['uid']
+//                                        // Build rpms
+//                                        buildCheckUtils.executeInContainer(containerName: "package-checks",
+//                                                                                containerScript: "/tmp/koji_build_pr.sh",
+//                                                                                stageVars: stageVars,
+//                                                                                stageName: env.currentStage)
+//                                    }
+//                                }
+//
+//                                // Inject variables
+//                                def job_props = "${env.WORKSPACE}/" + env.currentStage + "/logs/job.props"
+//                                if (fileExists(job_props)) {
+//                                     def job_props_groovy = "${env.WORKSPACE}/job.props.groovy"
+//                                     buildCheckUtils.convertProps(job_props, job_props_groovy)
+//                                     load(job_props_groovy)
+//
+//                                    // Make sure we generated a good repo
+//                                    buildCheckUtils.executeInContainer(containerName: "package-checks",
+//                                                                            containerScript: "/tmp/repoquery.sh",
+//                                                                            stageVars: stageVars,
+//                                                                            stageName: env.currentStage)
+//                                }
+//                            }
+//
+//                            if (env.PROVIDED_KOJI_TASKID?.trim()) {
+//                                // Check if to add scratch tag to build name
+//                                String scratchTag = env.isScratch.toBoolean() ? ":S" : ""
+//                                // Decorate our build to not be null now
+//                                String buildName = "${env.koji_task_id}${scratchTag}:${env.nvr}"
+//                                currentBuild.displayName = buildName
+//                                currentBuild.description = buildName
+//                            }
+//
+//                            // Set our message topic, properties, and content
+//                            messageFields = buildCheckUtils.setTestMessageFields("package.complete", artifact, parsedMsg)
+//
+//                            // Send message org.centos.prod.ci.pipeline.allpackages.package.complete on fedmsg
+//                            buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
+//
+//                            // Set our message topic, properties, and content
+//                            messageFields = buildCheckUtils.setTestMessageFields("image.queued", artifact, parsedMsg)
+//
+//                            // Send message org.centos.prod.ci.pipeline.allpackages.image.queued on fedmsg
+//                            buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
+//                        }
+//
+//                        env.currentStage = "cloud-image-compose"
+//                        stage(env.currentStage) {
+//
+//                            buildCheckUtils.handlePipelineStep(stepName: env.currentStage, debug: true) {
+//
+//                                // Set our message topic, properties, and content
+//                                messageFields = buildCheckUtils.setTestMessageFields("image.running", artifact, parsedMsg)
+//
+//                                // Send message org.centos.prod.ci.pipeline.allpackages.image.running on fedmsg
+//                                buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
+//
+//                                // Set stage specific vars
+//                                stageVars = buildCheckUtils.setStageEnvVars(env.currentStage)
+//
+//                                // Prepare to send stage.complete message on failure
+//                                env.messageStage = 'image.complete'
+//
+//                                // Compose image
+//                                buildCheckUtils.executeInContainer(containerName: "package-checks",
+//                                                                        containerScript: "/tmp/virt-customize.sh",
+//                                                                        stageVars: stageVars,
+//                                                                        stageName: env.currentStage)
+//
+//                                // Set our message topic, properties, and content
+//                                messageFields = buildCheckUtils.setTestMessageFields("image.complete", artifact, parsedMsg)
+//
+//                                // Send message org.centos.prod.ci.pipeline.allpackages.image.complete on fedmsg
+//                                buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
+//
+//                            }
+//                        }
+//
+//                        env.currentStage = "nvr-verify"
+//                        stage(env.currentStage) {
+//
+//                            buildCheckUtils.handlePipelineStep(stepName: env.currentStage, debug: true) {
+//                                // Set stage specific vars
+//                                stageVars = buildCheckUtils.setStageEnvVars(currentStage)
+//
+//                                // This can't be in setStageEnvVars because it depends on env.WORKSPACE
+//                                stageVars['TEST_SUBJECTS'] = "${env.WORKSPACE}/images/test_subject.qcow2"
+//                                stageVars['TEST_LOCATION'] = "${env.PAGURE_URL}/${env.fed_namespace}/${env.fed_repo}"
+//
+//                                // tests namespace does not install any package, so do no need to verify rpm
+//                                if (env.fed_namespace != "tests" ) {
+//                                    // Run nvr verification
+//                                    buildCheckUtils.executeInContainer(containerName: "package-checks",
+//                                                                            containerScript: "/tmp/verify-rpm.sh",
+//                                                                            stageVars: stageVars,
+//                                                                            stageName: env.currentStage)
+//                                }
+//                            }
+//                        }
 
                         env.currentStage = "package-tests"
                         stage(env.currentStage) {
