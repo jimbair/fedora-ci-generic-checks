@@ -305,7 +305,6 @@ timestamps {
                                     buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
 
 
-                            }
                         }
 
                         buildResult = buildResult ?: 'SUCCESS'
