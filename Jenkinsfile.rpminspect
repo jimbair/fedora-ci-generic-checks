@@ -392,7 +392,7 @@ timestamps {
                                     buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
 
                                     // This can't be in setStageEnvVars because it depends on env.WORKSPACE
-                                    stageVars['TEST_SUBJECTS'] = "${env.WORKSPACE}/images/test_subject.qcow2"
+                                    // stageVars['TEST_SUBJECTS'] = "${env.WORKSPACE}/images/test_subject.qcow2"
 
                                     // Prepare to send stage.complete message on failure
                                     env.messageStage = 'package.test.functional.complete'
