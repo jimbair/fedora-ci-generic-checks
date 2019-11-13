@@ -4,6 +4,10 @@ package org.fedoraproject.ci
 import org.centos.*
 import groovy.json.JsonOutput
 
+// this is for debug, printing stacktrace inline
+import java.io.StringWriter
+import java.io.PrintWriter
+
 /**
  * Library to check the dist branch to as rawhide should map to a release number
  * This value will begin with 'fc'
@@ -235,7 +239,12 @@ def setTestMessageFields(String messageType, String artifact, Map parsedMsg) {
     }
     catch(Exception ex) {
         print("hit a problem accessing myConstructedMessage")
-        org.codehaus.groovy.runtime.StackTraceUtils.printSanitizedStackTrace(ex)
+        StringWriter sw = new StringWriter()
+        PrintWriter pw = new PrintWriter(sw)
+
+        org.codehaus.groovy.runtime.StackTraceUtils.printSanitizedStackTrace(ex, pw)
+        stringStackTrace = sw.toString()
+        print(stringStackTrace)
         return ['topic': myTopic, 'properties': '', 'content': '']
     }
 }
