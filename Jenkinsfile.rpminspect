@@ -1,5 +1,7 @@
 #!groovy
 
+import groovy.json.JsonOutput
+
 timestamps {
     // CANNED CI_MESSAGE
     def CANNED_CI_MESSAGE = '{"build_id":1404149,"old":0,"name":"mirrormanager2","task_id":38507123,"attribute":"state","request":["git+https://src.fedoraproject.org/rpms/mirrormanager2.git#763ae90d00b4735a32c96407103e4a4e31360de6","f30-candidate",{}],"instance":"primary","epoch":null,"version":"0.11","owner":"adrian","new":1,"release":"1.fc30"}'
@@ -152,11 +154,6 @@ timestamps {
     {
         node(podName) {
 
-            // pull in ciMetrics from ci-pipeline
-            // ciMetrics.prefix = buildCheckUtils.influxDBPrefix()
-            // buildCheckUtils.cimetrics = ciMetrics
-            def jobMeasurement = buildCheckUtils.timedMeasurement()
-
             def buildResult = null
 
             // Setting timeout to 8 hours, some packages can take few hours to build in koji
@@ -256,6 +253,9 @@ timestamps {
                                     // This can't be in setStageEnvVars because it depends on env.WORKSPACE
                                     // stageVars['TEST_SUBJECTS'] = "${env.WORKSPACE}/images/test_subject.qcow2"
 
+                                    def json_message = readJSON text: env.CI_MESSAGE
+                                    env.TARGET_ENVR = "${json_message['name']}-${json_message['version']}-${json_message['release']}"
+
                                     // Prepare to send stage.complete message on failure
                                     env.messageStage = 'package.test.functional.complete'
 
@@ -342,14 +342,6 @@ timestamps {
 
                         // Send message org.centos.prod.ci.pipeline.allpackages.complete on fedmsg
                         buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
-
-                        // set the metrics we want
-                        // def packageMeasurement = "${ciMetrics.prefix}_${env.fed_repo}"
-                        // ciMetrics.setMetricTag(jobMeasurement, 'package_name', env.fed_repo)
-                        // ciMetrics.setMetricTag(jobMeasurement, 'build_result', currentBuild.result)
-                        // ciMetrics.setMetricField(jobMeasurement, 'build_time', currentBuild.getDuration())
-                        // ciMetrics.setMetricField(packageMeasurement, 'build_time', currentBuild.getDuration())
-                        // ciMetrics.setMetricTag(packageMeasurement, 'package_name', env.fed_repo)
 
                     }
                 }
