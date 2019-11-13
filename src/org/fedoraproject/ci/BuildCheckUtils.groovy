@@ -228,9 +228,15 @@ def setTestMessageFields(String messageType, String artifact, Map parsedMsg) {
 
     print("message type at the end of setTestMessageFields is: " + messageType)
     print("artifact at the end of setTestMessageFields is: " + artifact)
-    print("type of myConstructedMessage is: " + myConstructedMessage.getClass())
+    try {
+        print("type of myConstructedMessage is: " + myConstructedMessage.getClass())
 
-    return [ 'topic': myTopic, 'properties': '', 'content': myConstructedMessage() ]
+        return ['topic': myTopic, 'properties': '', 'content': myConstructedMessage()]
+    }
+    catch(Exception ex) {
+        print("hit a problem accessing myConstructedMessage")
+        return ['topic': myTopic, 'properties': '', 'content': '']
+    }
 }
 
 /**
