@@ -235,6 +235,7 @@ def setTestMessageFields(String messageType, String artifact, Map parsedMsg) {
     }
     catch(Exception ex) {
         print("hit a problem accessing myConstructedMessage")
+        org.codehaus.groovy.runtime.StackTraceUtils.printSanitizedStackTrace(ex)
         return ['topic': myTopic, 'properties': '', 'content': '']
     }
 }
