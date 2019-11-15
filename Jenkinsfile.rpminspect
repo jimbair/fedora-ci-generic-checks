@@ -241,9 +241,7 @@ timestamps {
 
                                     // queued shouldn't be sent here, sent when scheduled in other job
                                     // messageFields = buildCheckUtils.setTestMessageFields("package.test.functional.queued", artifact, parsedMsg)
-
-                                    // Send message org.centos.prod.ci.pipeline.allpackages.package.test.functional.queued on fedmsg
-                                    buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
+                                    // buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
 
                                     // Set stage specific vars
                                     stageVars = buildCheckUtils.setStageEnvVars(env.currentStage)
