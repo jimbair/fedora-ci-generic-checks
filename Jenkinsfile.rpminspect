@@ -228,9 +228,6 @@ timestamps {
                                 // Gather some info about the node we are running on for diagnostics
                                 buildCheckUtils.verifyPod(OPENSHIFT_NAMESPACE, env.NODE_NAME)
 
-                                // Send message org.centos.prod.ci.<artifact>.test.running on fedmsg
-                                messageFields = buildCheckUtils.setTestMessageFields("running", artifact, parsedMsg)
-                                buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
                             }
                         }
 
@@ -238,8 +235,12 @@ timestamps {
 
                         env.currentStage = "run-rpminspect"
                         stage(env.currentStage) {
-                                    // Set our message topic, properties, and content
-                                    messageFields = buildCheckUtils.setTestMessageFields("package.test.functional.queued", artifact, parsedMsg)
+                            // Send message org.centos.prod.ci.<artifact>.test.running on fedmsg
+                            messageFields = buildCheckUtils.setTestMessageFields("running", artifact, parsedMsg)
+                            buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
+
+                                    // queued shouldn't be sent here, sent when scheduled in other job
+                                    // messageFields = buildCheckUtils.setTestMessageFields("package.test.functional.queued", artifact, parsedMsg)
 
                                     // Send message org.centos.prod.ci.pipeline.allpackages.package.test.functional.queued on fedmsg
                                     buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
@@ -247,20 +248,12 @@ timestamps {
                                     // Set stage specific vars
                                     stageVars = buildCheckUtils.setStageEnvVars(env.currentStage)
 
-                                    // Set our message topic, properties, and content
-                                    messageFields = buildCheckUtils.setTestMessageFields("package.test.functional.running", artifact, parsedMsg)
-
-                                    // Send message org.centos.prod.ci.pipeline.allpackages.package.test.functional.running on fedmsg
-                                    buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
-
-                                    // This can't be in setStageEnvVars because it depends on env.WORKSPACE
-                                    // stageVars['TEST_SUBJECTS'] = "${env.WORKSPACE}/images/test_subject.qcow2"
-
+                                    // parse NVR from incoming message
                                     def json_message = readJSON text: env.CI_MESSAGE
                                     env.TARGET_ENVR = "${json_message['name']}-${json_message['version']}-${json_message['release']}"
 
                                     // Prepare to send stage.complete message on failure
-                                    env.messageStage = 'package.test.functional.complete'
+                                    env.messageStage = 'complete'
 
                                     // Run functional tests
                                     try {
@@ -298,14 +291,14 @@ timestamps {
                                     }
 
                                     // Set our message topic, properties, and content
-                                    messageFields = buildCheckUtils.setTestMessageFields("package.test.functional.complete", artifact, parsedMsg)
-
-                                    // Send message org.centos.prod.ci.pipeline.allpackages.package.test.functional.complete on fedmsg
-                                    buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
-
-                                    // Send message org.centos.prod.ci.<artifact>.test.complete on fedmsg
-                                    messageFields = buildCheckUtils.setTestMessageFields("complete", artifact, parsedMsg)
-                                    buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
+//                                    messageFields = buildCheckUtils.setTestMessageFields("package.test.functional.complete", artifact, parsedMsg)
+//
+//                                    // Send message org.centos.prod.ci.pipeline.allpackages.package.test.functional.complete on fedmsg
+//                                    buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
+//
+//                                    // Send message org.centos.prod.ci.<artifact>.test.complete on fedmsg
+//                                    messageFields = buildCheckUtils.setTestMessageFields("complete", artifact, parsedMsg)
+//                                    buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
 
 
                         }
