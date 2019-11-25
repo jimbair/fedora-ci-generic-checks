@@ -54,6 +54,7 @@ timestamps {
                     print "CI_MESSAGE"
                     print CI_MESSAGE
 
+                    parsedMsg = kojiMessage(message: env.CI_MESSAGE, ignoreErrors: true)
                     primaryKoji = parsedMsg['instance'] == "primary"
                     currentBuild.displayName = "BUILD#: ${env.BUILD_NUMBER}"
                     }
