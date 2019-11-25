@@ -76,7 +76,7 @@ timestamps {
                 stepName = 'schedule build'
                 stage(stepName) {
 
-                    if (primaryKoji) {
+                    if (primaryKoji && !env.isScratch.toBoolean()) {
                     checks = ['rpminspect']
                         for(checkname in checks) {
 
