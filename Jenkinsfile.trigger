@@ -66,17 +66,19 @@ timestamps {
                 stepName = 'schedule build'
                 stage(stepName) {
 
+                    if (primaryKoji) {
                     checks = ['rpminspect']
-                    for(checkname in checks) {
+                        for(checkname in checks) {
 
-                        retry(TRIGGER_RETRY_COUNT) {
-                            buildCheckUtils.handlePipelineStep(stepName: stepName, debug: true) {
+                            retry(TRIGGER_RETRY_COUNT) {
+                                buildCheckUtils.handlePipelineStep(stepName: stepName, debug: true) {
 
-                            build job: "fedora-${checkname}",
-                                // Scratch messages from task.state.changed call it id, not task_id
-                                parameters: [string(name: 'PROVIDED_KOJI_TASKID', value: env.task_id),
-                                            string(name: 'CI_MESSAGE', value: env.CI_MESSAGE)],
-                                wait: false
+                                build job: "fedora-${checkname}",
+                                    // Scratch messages from task.state.changed call it id, not task_id
+                                    parameters: [string(name: 'PROVIDED_KOJI_TASKID', value: env.task_id),
+                                                string(name: 'CI_MESSAGE', value: env.CI_MESSAGE)],
+                                    wait: false
+                                }
                             }
                         }
                     }
