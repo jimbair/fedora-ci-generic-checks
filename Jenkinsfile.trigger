@@ -87,7 +87,7 @@ timestamps {
                                     wait: false
                                 }
                             }
-                            messageFields = buildCheckUtils.setTestMessageFields("package.test.functional.queued", artifact, parsedMsg)
+                            messageFields = buildCheckUtils.setTestMessageFields("queued", artifact, parsedMsg)
                             buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
 
                         }
