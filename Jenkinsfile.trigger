@@ -66,6 +66,9 @@ timestamps {
 
                     // we only care about koji-builds for now
                     env.artifact = 'koji-build'
+
+                    // set env vars needed for sending messages
+                    buildCheckUtils.setDefaultEnvVars()
                     buildCheckUtils.setScratchVars(parsedMsg)
                     }
                 }
