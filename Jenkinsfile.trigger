@@ -2,8 +2,7 @@
 
 
 timestamps {
-    def libraries = ['upstream-fedora-pipeline': ['master', 'https://github.com/CentOS-PaaS-SIG/upstream-fedora-pipeline.git'],
-                     'contra-lib'              : ['master', 'https://github.com/openshift/contra-lib.git']]
+    def libraries = ['contra-lib'              : ['master', 'https://github.com/openshift/contra-lib.git']]
 
     libraries.each { name, repo ->
         library identifier: "${name}@${repo[0]}",
@@ -45,7 +44,7 @@ timestamps {
             try {
                 stepName = 'extract information'
                 stage(stepName) {
-                    packagepipelineUtils.handlePipelineStep(stepName: stepName, debug: true) {
+                    buildCheckUtils.handlePipelineStep(stepName: stepName, debug: true) {
 
                     print "CI_MESSAGE"
                     print CI_MESSAGE
@@ -62,7 +61,7 @@ timestamps {
                     for(checkname in checks) {
 
                         retry(TRIGGER_RETRY_COUNT) {
-                            packagepipelineUtils.handlePipelineStep(stepName: stepName, debug: true) {
+                            buildCheckUtils.handlePipelineStep(stepName: stepName, debug: true) {
 
                             build job: "fedora-${checkname}",
                                 // Scratch messages from task.state.changed call it id, not task_id
