@@ -60,6 +60,9 @@ timestamps {
                     primaryKoji = parsedMsg['instance'] == "primary"
                     env.task_id = parsedMsg['task_id']
                     currentBuild.displayName = "BUILD#: ${env.BUILD_NUMBER}"
+
+                    // we only care about koji-builds for now
+                    env.artifact = 'koji-build'
                     }
                 }
 
@@ -80,6 +83,9 @@ timestamps {
                                     wait: false
                                 }
                             }
+                            messageFields = buildCheckUtils.setTestMessageFields("package.test.functional.queued", artifact, parsedMsg)
+                            buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
+
                         }
                     }
                 }
