@@ -15,6 +15,9 @@ timestamps {
 
     }
 
+    // send staging messages
+    env.MSG_PROVIDER = "fedora-fedmsg-stage"
+
     properties(
             [
                     buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '500', daysToKeepStr: '', numToKeepStr: '500')),
