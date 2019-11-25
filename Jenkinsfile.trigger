@@ -40,7 +40,7 @@ timestamps {
 
 
     node('master') {
-        packagepipelineUtils.ciPipeline {
+        buildCheckUtils.ciPipeline {
             try {
                 stepName = 'extract information'
                 stage(stepName) {
