@@ -63,6 +63,7 @@ timestamps {
 
                     // we only care about koji-builds for now
                     env.artifact = 'koji-build'
+                    buildCheckUtils.setScratchVars(parsedMsg)
                     }
                 }
 
