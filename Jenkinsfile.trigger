@@ -43,6 +43,8 @@ timestamps {
             ]
     )
 
+    def TRIGGER_RETRY_COUNT = 3
+    def stepName = null
 
     node('master') {
         buildCheckUtils.ciPipeline {
