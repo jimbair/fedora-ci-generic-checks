@@ -1,7 +1,5 @@
 #!groovy
 
-import groovy.json.JsonOutput
-
 timestamps {
     // CANNED CI_MESSAGE
     def CANNED_CI_MESSAGE = '{"build_id":1404149,"old":0,"name":"mirrormanager2","task_id":38507123,"attribute":"state","request":["git+https://src.fedoraproject.org/rpms/mirrormanager2.git#763ae90d00b4735a32c96407103e4a4e31360de6","f30-candidate",{}],"instance":"primary","epoch":null,"version":"0.11","owner":"adrian","new":1,"release":"1.fc30"}'
@@ -21,9 +19,6 @@ timestamps {
     // Needed for podTemplate()
     env.SLAVE_TAG = env.SLAVE_TAG ?: 'stable'
     env.FEDORACI_RUNNER_TAG = env.FEDORACI_RUNNER_TAG ?: 'stable'
-
-    // send staging messages
-    env.MSG_PROVIDER = "fedora-fedmsg-stage"
 
     // Execution ID for this run of the pipeline
     def executionID = UUID.randomUUID().toString()
@@ -157,7 +152,15 @@ timestamps {
     {
         node(podName) {
 
+            // pull in ciMetrics from ci-pipeline
+            // ciMetrics.prefix = buildCheckUtils.influxDBPrefix()
+            // buildCheckUtils.cimetrics = ciMetrics
+            def jobMeasurement = buildCheckUtils.timedMeasurement()
+
             def buildResult = null
+
+            //trying to set our messaging provider
+            env.MSG_PROVIDER = "fedora-messaging-stg"
 
             // Setting timeout to 8 hours, some packages can take few hours to build in koji
             // and tests can take up to 4 hours to run.
@@ -222,36 +225,179 @@ timestamps {
                                 buildCheckUtils.setDefaultEnvVars()
 
                                 // Prepare Credentials (keys, passwords, etc)
-                                // I don't think that we need this for our particular usecase and it's causing problems, disabling
-                                // buildCheckUtils.prepareCredentials('fedora-keytab')
+                                buildCheckUtils.prepareCredentials('fedora-keytab')
 
                                 // Gather some info about the node we are running on for diagnostics
                                 buildCheckUtils.verifyPod(OPENSHIFT_NAMESPACE, env.NODE_NAME)
 
+                                // Send message org.centos.prod.ci.<artifact>.test.running on fedmsg
+                                messageFields = buildCheckUtils.setTestMessageFields("running", artifact, parsedMsg)
+                                buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
                             }
                         }
 
-
-
-                        env.currentStage = "run-rpminspect"
+                        // Set our current stage value
+                        env.currentStage = "koji-build"
                         stage(env.currentStage) {
-                            // Send message org.centos.prod.ci.<artifact>.test.running on fedmsg
-                            messageFields = buildCheckUtils.setTestMessageFields("running", artifact, parsedMsg)
+
+                            // Set stage specific vars
+                            buildCheckUtils.handlePipelineStep('stepName': env.currentStage, 'debug': true) {
+                                stageVars = buildCheckUtils.setStageEnvVars(env.currentStage)
+
+                                // Return a map (messageFields) of our message topic, properties, and content
+                                messageFields = buildCheckUtils.setTestMessageFields("package.running", artifactOld, parsedMsg)
+
+                                // Send message org.centos.prod.ci.pipeline.allpackages.package.running on fedmsg
+                                buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
+
+                                // Prepare to send stage.complete message on failure
+                                env.messageStage = 'package.complete'
+
+                                // Get DistBranch value to find rpm NVR
+                                env.DIST_BRANCH = buildCheckUtils.setDistBranch(env.branch)
+                                stageVars['DIST_BRANCH'] = env.DIST_BRANCH
+
+                                // If a task id was provided, use those artifacts and
+                                // bypass submitting a new rpm build
+                                if (env.PROVIDED_KOJI_TASKID?.trim()) {
+                                    stageVars['PROVIDED_KOJI_TASKID'] = env.PROVIDED_KOJI_TASKID
+                                    // Run script that simply downloads artifacts
+                                    // and stores them in jenkins workspace
+                                    buildCheckUtils.executeInContainer(containerName: "package-checks",
+                                                                            containerScript: "/tmp/pull_old_task.sh",
+                                                                            stageVars: stageVars,
+                                                                            stageName: env.currentStage)
+                                } else {
+                                    // For tests namespace there is no package to build
+                                    if (env.fed_namespace != "tests" ) {
+                                        // koji_build_pr relies on fed_uid var
+                                        stageVars['fed_uid'] = parsedMsg['pullrequest']['uid']
+                                        // Build rpms
+                                        buildCheckUtils.executeInContainer(containerName: "package-checks",
+                                                                                containerScript: "/tmp/koji_build_pr.sh",
+                                                                                stageVars: stageVars,
+                                                                                stageName: env.currentStage)
+                                    }
+                                }
+
+                                // Inject variables
+                                def job_props = "${env.WORKSPACE}/" + env.currentStage + "/logs/job.props"
+                                if (fileExists(job_props)) {
+                                     def job_props_groovy = "${env.WORKSPACE}/job.props.groovy"
+                                     buildCheckUtils.convertProps(job_props, job_props_groovy)
+                                     load(job_props_groovy)
+
+                                    // Make sure we generated a good repo
+                                    buildCheckUtils.executeInContainer(containerName: "package-checks",
+                                                                            containerScript: "/tmp/repoquery.sh",
+                                                                            stageVars: stageVars,
+                                                                            stageName: env.currentStage)
+                                }
+                            }
+
+                            if (env.PROVIDED_KOJI_TASKID?.trim()) {
+                                // Check if to add scratch tag to build name
+                                String scratchTag = env.isScratch.toBoolean() ? ":S" : ""
+                                // Decorate our build to not be null now
+                                String buildName = "${env.koji_task_id}${scratchTag}:${env.nvr}"
+                                currentBuild.displayName = buildName
+                                currentBuild.description = buildName
+                            }
+
+                            // Set our message topic, properties, and content
+                            messageFields = buildCheckUtils.setTestMessageFields("package.complete", artifactOld, parsedMsg)
+
+                            // Send message org.centos.prod.ci.pipeline.allpackages.package.complete on fedmsg
                             buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
 
-                                    // queued shouldn't be sent here, sent when scheduled in other job
-                                    // messageFields = buildCheckUtils.setTestMessageFields("package.test.functional.queued", artifact, parsedMsg)
-                                    // buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
+                            // Set our message topic, properties, and content
+                            messageFields = buildCheckUtils.setTestMessageFields("image.queued", artifactOld, parsedMsg)
+
+                            // Send message org.centos.prod.ci.pipeline.allpackages.image.queued on fedmsg
+                            buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
+                        }
+
+                        env.currentStage = "cloud-image-compose"
+                        stage(env.currentStage) {
+
+                            buildCheckUtils.handlePipelineStep(stepName: env.currentStage, debug: true) {
+
+                                // Set our message topic, properties, and content
+                                messageFields = buildCheckUtils.setTestMessageFields("image.running", artifactOld, parsedMsg)
+
+                                // Send message org.centos.prod.ci.pipeline.allpackages.image.running on fedmsg
+                                buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
+
+                                // Set stage specific vars
+                                stageVars = buildCheckUtils.setStageEnvVars(env.currentStage)
+
+                                // Prepare to send stage.complete message on failure
+                                env.messageStage = 'image.complete'
+
+                                // Compose image
+                                buildCheckUtils.executeInContainer(containerName: "package-checks",
+                                                                        containerScript: "/tmp/virt-customize.sh",
+                                                                        stageVars: stageVars,
+                                                                        stageName: env.currentStage)
+
+                                // Set our message topic, properties, and content
+                                messageFields = buildCheckUtils.setTestMessageFields("image.complete", artifactOld, parsedMsg)
+
+                                // Send message org.centos.prod.ci.pipeline.allpackages.image.complete on fedmsg
+                                buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
+
+                            }
+                        }
+
+                        env.currentStage = "nvr-verify"
+                        stage(env.currentStage) {
+
+                            buildCheckUtils.handlePipelineStep(stepName: env.currentStage, debug: true) {
+                                // Set stage specific vars
+                                stageVars = buildCheckUtils.setStageEnvVars(currentStage)
+
+                                // This can't be in setStageEnvVars because it depends on env.WORKSPACE
+                                stageVars['TEST_SUBJECTS'] = "${env.WORKSPACE}/images/test_subject.qcow2"
+                                stageVars['TEST_LOCATION'] = "${env.PAGURE_URL}/${env.fed_namespace}/${env.fed_repo}"
+
+                                // tests namespace does not install any package, so do no need to verify rpm
+                                if (env.fed_namespace != "tests" ) {
+                                    // Run nvr verification
+                                    buildCheckUtils.executeInContainer(containerName: "package-checks",
+                                                                            containerScript: "/tmp/verify-rpm.sh",
+                                                                            stageVars: stageVars,
+                                                                            stageName: env.currentStage)
+                                }
+                            }
+                        }
+
+                        env.currentStage = "package-tests"
+                        stage(env.currentStage) {
+                            // Only run this stage if tests exist
+                            if (!buildCheckUtils.checkTests(env.fed_repo, env.fed_branch, 'classic', (artifact == 'dist-git-pr' ? env.fed_pr_id : null), env.fed_namespace)) {
+                                buildCheckUtils.skip(env.currentStage)
+                            } else {
+                                buildCheckUtils.handlePipelineStep(stepName: env.currentStage, debug: true) {
+                                    // Set our message topic, properties, and content
+                                    messageFields = buildCheckUtils.setTestMessageFields("package.test.functional.queued", artifactOld, parsedMsg)
+
+                                    // Send message org.centos.prod.ci.pipeline.allpackages.package.test.functional.queued on fedmsg
+                                    buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
 
                                     // Set stage specific vars
                                     stageVars = buildCheckUtils.setStageEnvVars(env.currentStage)
 
-                                    // parse NVR from incoming message
-                                    def json_message = readJSON text: env.CI_MESSAGE
-                                    env.TARGET_ENVR = "${json_message['name']}-${json_message['version']}-${json_message['release']}"
+                                    // Set our message topic, properties, and content
+                                    messageFields = buildCheckUtils.setTestMessageFields("package.test.functional.running", artifactOld, parsedMsg)
+
+                                    // Send message org.centos.prod.ci.pipeline.allpackages.package.test.functional.running on fedmsg
+                                    buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
+
+                                    // This can't be in setStageEnvVars because it depends on env.WORKSPACE
+                                    stageVars['TEST_SUBJECTS'] = "${env.WORKSPACE}/images/test_subject.qcow2"
 
                                     // Prepare to send stage.complete message on failure
-                                    env.messageStage = 'complete'
+                                    env.messageStage = 'package.test.functional.complete'
 
                                     // Run functional tests
                                     try {
@@ -289,16 +435,18 @@ timestamps {
                                     }
 
                                     // Set our message topic, properties, and content
-//                                    messageFields = buildCheckUtils.setTestMessageFields("package.test.functional.complete", artifact, parsedMsg)
-//
-//                                    // Send message org.centos.prod.ci.pipeline.allpackages.package.test.functional.complete on fedmsg
-//                                    buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
-//
-//                                    // Send message org.centos.prod.ci.<artifact>.test.complete on fedmsg
-//                                    messageFields = buildCheckUtils.setTestMessageFields("complete", artifact, parsedMsg)
-//                                    buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
+                                    messageFields = buildCheckUtils.setTestMessageFields("package.test.functional.complete", artifactOld, parsedMsg)
+
+                                    // Send message org.centos.prod.ci.pipeline.allpackages.package.test.functional.complete on fedmsg
+                                    buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
+
+                                    // Send message org.centos.prod.ci.<artifact>.test.complete on fedmsg
+                                    messageFields = buildCheckUtils.setTestMessageFields("complete", artifact, parsedMsg)
+                                    buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
 
 
+                                }
+                            }
                         }
 
                         buildResult = buildResult ?: 'SUCCESS'
@@ -309,7 +457,7 @@ timestamps {
                         currentBuild.result = buildResult
 
                         // Send message org.centos.prod.ci.pipeline.allpackages.<stage>.complete on fedmsg if stage failed
-                        messageFields = buildCheckUtils.setTestMessageFields(env.messageStage, artifact, parsedMsg)
+                        messageFields = buildCheckUtils.setTestMessageFields(messageStage, artifactOld, parsedMsg)
                         buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
 
                         // Send message org.centos.prod.ci.<artifact>.test.error on fedmsg
@@ -332,10 +480,18 @@ timestamps {
                         }
 
                         // Set our message topic, properties, and content
-                        messageFields = buildCheckUtils.setTestMessageFields("complete", artifact, parsedMsg)
+                        messageFields = buildCheckUtils.setTestMessageFields("complete", artifactOld, parsedMsg)
 
                         // Send message org.centos.prod.ci.pipeline.allpackages.complete on fedmsg
                         buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
+
+                        // set the metrics we want
+                        // def packageMeasurement = "${ciMetrics.prefix}_${env.fed_repo}"
+                        // ciMetrics.setMetricTag(jobMeasurement, 'package_name', env.fed_repo)
+                        // ciMetrics.setMetricTag(jobMeasurement, 'build_result', currentBuild.result)
+                        // ciMetrics.setMetricField(jobMeasurement, 'build_time', currentBuild.getDuration())
+                        // ciMetrics.setMetricField(packageMeasurement, 'build_time', currentBuild.getDuration())
+                        // ciMetrics.setMetricTag(packageMeasurement, 'package_name', env.fed_repo)
 
                     }
                 }
