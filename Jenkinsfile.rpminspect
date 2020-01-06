@@ -160,7 +160,8 @@ timestamps {
             def buildResult = null
 
             //trying to set our messaging provider
-            env.MSG_PROVIDER = "FedoraMessagingStage"
+            //env.MSG_PROVIDER = "FedoraMessagingStage"
+            env.MSG_PROVIDER = "fedora-fedmsg-stage"
 
             // Setting timeout to 8 hours, some packages can take few hours to build in koji
             // and tests can take up to 4 hours to run.
