@@ -479,6 +479,7 @@ timestamps {
 
                         // Report the exception
                         echo "Error: Exception from " + env.currentStage + ":"
+                        print(e.getMessage())
                         echo e.getMessage()
 
                         // that turned out to be extremely unhelpful, let's try to get some actual data from the exception
