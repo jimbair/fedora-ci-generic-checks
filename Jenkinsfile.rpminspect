@@ -481,13 +481,7 @@ timestamps {
                         echo e.getMessage()
 
                         // that turned out to be extremely unhelpful, let's try to get some actual data from the exception
-                        StackTraceUtils.sanitize(e)
-                        StringWriter sw = new StringWriter()
-                        PrintWriter pw = new PrintWriter(sw)
-
-                        org.codehaus.groovy.runtime.StackTraceUtils.printSanitizedStackTrace(ex, pw)
-                        stringStackTrace = sw.toString()
-                        print(stringStackTrace)
+                        org.codehaus.groovy.runtime.StackTraceUtils.printSanitizedStackTrace(e)
 
                     } finally {
                         currentBuild.result = buildResult
