@@ -189,12 +189,8 @@ timestamps {
                     try {
                             // Prepare our environment
                         env.currentStage = "prepare-environment"
+                        env.messageStage = "running"
 
-                        // This doesn't make a heck of a lot of sense but given how it's used, choices are limited
-                        // and this is less wrong than the other options.
-                        // it has to be a valid message type according to the ci messaging guidelines, not sure why it
-                        // isn't set in the exception handling bits that are trying to send the message
-                        //env.messageStage = "error"
                         stage(env.currentStage) {
 
                             buildCheckUtils.handlePipelineStep('stepName': env.currentStage, 'debug': true) {
