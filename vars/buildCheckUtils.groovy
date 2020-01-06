@@ -69,6 +69,7 @@ class buildCheckUtils implements Serializable {
     }
 
     def prepareCredentials(String credentials) {
+        print("preparing credentials, earlier in vars")
         buildCheckUtils.prepareCredentials(credentials)
     }
 
