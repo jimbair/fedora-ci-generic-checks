@@ -391,9 +391,9 @@ timestamps {
                         env.currentStage = "package-tests"
                         stage(env.currentStage) {
                             // Only run this stage if tests exist
-                            if (!buildCheckUtils.checkTests(env.fed_repo, env.fed_branch, 'classic', (artifact == 'dist-git-pr' ? env.fed_pr_id : null), env.fed_namespace)) {
-                                buildCheckUtils.skip(env.currentStage)
-                            } else {
+                           // if (!buildCheckUtils.checkTests(env.fed_repo, env.fed_branch, 'classic', (artifact == 'dist-git-pr' ? env.fed_pr_id : null), env.fed_namespace)) {
+                           //     buildCheckUtils.skip(env.currentStage)
+                           // } else {
                                 buildCheckUtils.handlePipelineStep(stepName: env.currentStage, debug: true) {
                                     // Set our message topic, properties, and content
                                     messageFields = buildCheckUtils.setTestMessageFields("package.test.functional.queued", artifact, parsedMsg)
@@ -462,7 +462,7 @@ timestamps {
                                     buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
 
 
-                                }
+                               // }
                             }
                         }
 
