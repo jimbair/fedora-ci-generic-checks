@@ -1,5 +1,9 @@
 #!groovy
 
+// this is for debug, printing stacktrace inline
+import java.io.StringWriter
+import java.io.PrintWriter
+
 timestamps {
     // CANNED CI_MESSAGE
     def CANNED_CI_MESSAGE = '{"build_id":1404149,"old":0,"name":"mirrormanager2","task_id":38507123,"attribute":"state","request":["git+https://src.fedoraproject.org/rpms/mirrormanager2.git#763ae90d00b4735a32c96407103e4a4e31360de6","f30-candidate",{}],"instance":"primary","epoch":null,"version":"0.11","owner":"adrian","new":1,"release":"1.fc30"}'
@@ -474,6 +478,15 @@ timestamps {
                         // Report the exception
                         echo "Error: Exception from " + env.currentStage + ":"
                         echo e.getMessage()
+
+                        // that turned out to be extremely unhelpful, let's try to get some actual data from the exception
+                        StackTraceUtils.sanitize(e)
+                        StringWriter sw = new StringWriter()
+                        PrintWriter pw = new PrintWriter(sw)
+
+                        org.codehaus.groovy.runtime.StackTraceUtils.printSanitizedStackTrace(ex, pw)
+                        stringStackTrace = sw.toString()
+                        print(stringStackTrace)
 
                     } finally {
                         currentBuild.result = buildResult
