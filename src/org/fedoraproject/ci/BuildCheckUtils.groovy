@@ -260,6 +260,7 @@ def prepareCredentials(String credentials) {
             #!/bin/bash
             set -xeuo pipefail
 
+            echo "cp ${FEDORA_KEYTAB} fedora.keytab"
             cp ${FEDORA_KEYTAB} fedora.keytab
             chmod 0600 fedora.keytab
         '''
