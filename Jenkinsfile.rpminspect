@@ -235,7 +235,7 @@ timestamps {
                                 buildCheckUtils.setDefaultEnvVars()
                                 print("completed setDefaultEnvVars")
 
-                                print("keytab variable: " + env.FEDORA_KEYTAB")
+                                print("keytab variable: " + env.FEDORA_KEYTAB)
                                 // Prepare Credentials (keys, passwords, etc)
                                 buildCheckUtils.prepareCredentials('fedora-keytab')
                                 print("completed prepareCredentials")
