@@ -189,7 +189,7 @@ timestamps {
                         // and this is less wrong than the other options.
                         // it has to be a valid message type according to the ci messaging guidelines, not sure why it
                         // isn't set in the exception handling bits that are trying to send the message
-                        env.messageStage = "test.error"
+                        env.messageStage = "error"
                         stage(env.currentStage) {
 
                             buildCheckUtils.handlePipelineStep('stepName': env.currentStage, 'debug': true) {
