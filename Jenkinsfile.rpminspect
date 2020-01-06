@@ -3,6 +3,7 @@
 // this is for debug, printing stacktrace inline
 import java.io.StringWriter
 import java.io.PrintWriter
+import org.codehaus.groovy.runtime.StackTraceUtils
 
 timestamps {
     // CANNED CI_MESSAGE
