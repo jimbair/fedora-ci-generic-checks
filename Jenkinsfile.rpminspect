@@ -235,10 +235,12 @@ timestamps {
                                 buildCheckUtils.setDefaultEnvVars()
                                 print("completed setDefaultEnvVars")
 
+                                /* we don't really need krb, comment this out for now
                                 print("keytab variable: " + env.FEDORA_KEYTAB)
                                 // Prepare Credentials (keys, passwords, etc)
                                 buildCheckUtils.prepareCredentials('fedora-keytab')
                                 print("completed prepareCredentials")
+                                */
 
                                 // Gather some info about the node we are running on for diagnostics
                                 buildCheckUtils.verifyPod(OPENSHIFT_NAMESPACE, env.NODE_NAME)
