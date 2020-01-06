@@ -254,8 +254,8 @@ def setTestMessageFields(String messageType, String artifact, Map parsedMsg) {
  * @return
  */
 def prepareCredentials(String credentials) {
-    print("preparing credentials")
     withCredentials([file(credentialsId: credentials, variable: 'FEDORA_KEYTAB')]) {
+        print("preparing credentials: ${FEDORA_KEYTAB}")
         sh '''
             #!/bin/bash
             set -xeuo pipefail
