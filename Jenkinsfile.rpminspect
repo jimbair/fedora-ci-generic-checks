@@ -1,5 +1,7 @@
 #!groovy
 
+import groovy.json.JsonOutput
+
 // this is for debug, printing stacktrace inline
 import java.io.StringWriter
 import java.io.PrintWriter
@@ -396,7 +398,7 @@ timestamps {
                            // } else {
                                 buildCheckUtils.handlePipelineStep(stepName: env.currentStage, debug: true) {
                                     // Set our message topic, properties, and content
-                                    messageFields = buildCheckUtils.setTestMessageFields("package.test.functional.queued", artifact, parsedMsg)
+                                    //messageFields = buildCheckUtils.setTestMessageFields("package.test.functional.queued", artifact, parsedMsg)
 
                                     // Send message org.centos.prod.ci.pipeline.allpackages.package.test.functional.queued on fedmsg
                                     buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
@@ -411,10 +413,14 @@ timestamps {
                                     buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
 
                                     // This can't be in setStageEnvVars because it depends on env.WORKSPACE
-                                    stageVars['TEST_SUBJECTS'] = "${env.WORKSPACE}/images/test_subject.qcow2"
+                                    //stageVars['TEST_SUBJECTS'] = "${env.WORKSPACE}/images/test_subject.qcow2"
 
                                     // Prepare to send stage.complete message on failure
                                     env.messageStage = 'package.test.functional.complete'
+
+                                    // parse target envr into env var
+                                    def json_message = readJSON text: env.CI_MESSAGE
+                                    env.TARGET_ENVR = "${json_message['name']}-${json_message['version']}-${json_message['release']}"
 
                                     // Run functional tests
                                     try {
