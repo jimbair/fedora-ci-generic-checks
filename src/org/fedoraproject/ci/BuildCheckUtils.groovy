@@ -340,7 +340,7 @@ def setDefaultEnvVars(Map envMap=null){
             env.MSG_PROVIDER = "fedora-fedmsg"
         }
     }
-    if (env.MSG_PROVIDER == "fedora-fedmsg-stage" ){
+    if (env.MSG_PROVIDER == "FedoraMessagingStage" ){
         env.MAIN_TOPIC = env.MAIN_TOPIC ?: 'org.centos.stage'
         env.dataGrepperUrl = 'https://apps.stg.fedoraproject.org/datagrepper'
     } else if (env.MSG_PROVIDER == "fedora-fedmsg" ){
