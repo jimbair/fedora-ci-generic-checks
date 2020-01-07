@@ -334,7 +334,8 @@ def setDefaultEnvVars(Map envMap=null){
 
     if (!env.MSG_PROVIDER || env.MSG_PROVIDER == '') {
         if (env.ghprbActualCommit != null && (env.ghprbActualCommit != "master" || env.ghprbPullId != "")) {
-            env.MSG_PROVIDER = "fedora-fedmsg-stage"
+            //env.MSG_PROVIDER = "fedora-fedmsg-stage"
+            env.MSG_PROVIDER = "FedoraMessagingStage"
         } else {
             env.MSG_PROVIDER = "fedora-fedmsg"
         }
