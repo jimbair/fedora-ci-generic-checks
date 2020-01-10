@@ -27,25 +27,24 @@ timestamps {
                                     string(description: 'FedoraMessagingStage', defaultValue: CANNED_CI_MESSAGE, name: 'CI_MESSAGE')
                             ]
                     )//,
-// this doesn't appear to play nice with RabbitMQ so I'm hoping it'll work via GUI for now
-//                    pipelineTriggers(
-//                            [[$class: 'CIBuildTrigger',
-//                              noSquash: true,
-//                              providerData: [
-//                                  $class: 'FedMsgSubscriberProviderData',
-//                                  name: 'FedoraMessagingStage',
-//                                  overrides: [
-//                                      topic: 'org.fedoraproject.prod.buildsys.build.state.change'
-//                                  ],
-//                                  checks: [
-//                                      [field: 'new', expectedValue: '1|CLOSED'],
-//                                      [field: 'release', expectedValue: '.*fc.*'],
-//                                      [field: 'instance', expectedValue: 'primary'],
-//                                      [field: 'owner', expectedValue: '^(?!koschei).*']
-//                                  ]
-//                              ]
-//                            ]]
-//                    )
+                    pipelineTriggers(
+                            [[$class: 'CIBuildTrigger',
+                              noSquash: true,
+                              providerData: [
+                                  $class: 'FedMsgSubscriberProviderData',
+                                  name: 'fedora-fedmsg',
+                                  overrides: [
+                                      topic: 'org.fedoraproject.prod.buildsys.build.state.change'
+                                  ],
+                                  checks: [
+                                      [field: 'new', expectedValue: '1|CLOSED'],
+                                      [field: 'release', expectedValue: '.*fc.*'],
+                                      [field: 'instance', expectedValue: 'primary'],
+                                      [field: 'owner', expectedValue: '^(?!koschei).*']
+                                  ]
+                              ]
+                            ]]
+                    )
             ]
     )
 
