@@ -16,7 +16,7 @@ timestamps {
     }
 
     // send staging messages
-    env.MSG_PROVIDER = "fedora-fedmsg-stage"
+    env.MSG_PROVIDER = "fedora-fedmsg"
 
     properties(
             [
