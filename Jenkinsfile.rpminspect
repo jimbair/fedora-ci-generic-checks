@@ -67,7 +67,8 @@ timestamps {
                                            defaultValue: '38507123',
                                            description: 'Give an integer only task id to use those artifacts and bypass the rpm build stage (example 123456)'),
                                     string(name: 'ghprbActualCommit',
-                                           defaultValue: 'master',
+                                           // setting this to develop for now for testing
+                                           defaultValue: 'develop',
                                            description: 'The GitHub pull request commit'),
                                     string(name: 'ghprbGhRepository',
                                            defaultValue: '',
