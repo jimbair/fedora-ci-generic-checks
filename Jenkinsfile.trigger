@@ -26,7 +26,7 @@ timestamps {
                                     //string(description: 'fedora-fedmsg', defaultValue: '{}', name: 'CI_MESSAGE')
                                     string(description: 'FedoraMessagingStage', defaultValue: CANNED_CI_MESSAGE, name: 'CI_MESSAGE')
                             ]
-                    )//,
+                    ),
                     pipelineTriggers(
                             [[$class: 'CIBuildTrigger',
                               noSquash: true,
