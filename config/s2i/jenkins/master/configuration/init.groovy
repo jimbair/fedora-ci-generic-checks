@@ -42,8 +42,3 @@ GlobalCIConfiguration.get().addMessageProvider(fedmsg)
 logger.info("Setup fedora-fedmsg-stage Messaging Provider")
 FedMsgMessagingProvider fedmsgStage = new FedMsgMessagingProvider("fedora-fedmsg-stage", "tcp://stg.fedoraproject.org:9940", "tcp://172.19.4.36:9941", "org.fedoraproject");
 GlobalCIConfiguration.get().addMessageProvider(fedmsgStage)
-
-logger.info("Setup fedora-fedmsg-devel Messaging Provider")
-FedMsgMessagingProvider fedmsgDevel = new FedMsgMessagingProvider("fedora-fedmsg-devel", "tcp://fedmsg-relay.continuous-infra.svc:4001", "tcp://fedmsg-relay.continuous-infra.svc:2003", "org.fedoraproject");
-GlobalCIConfiguration.get().addMessageProvider(fedmsgDevel)
-
