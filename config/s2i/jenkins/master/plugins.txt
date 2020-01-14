@@ -16,20 +16,21 @@ openshift-sync:1.0.34
 # we leverage this plugin in the openshift-client DSL groovy shim
 lockable-resources:2.5
 
-
-# stuff from my local jenkins instance
+# stuff from other pipelines
 workflow-basic-steps:2.16
 workflow-job:2.32
 jquery-detached:1.2.1
 ssh-credentials:1.16
 git:3.10.0
 job-dsl:1.74
+ansicolor:0.6.2
+timestamper:1.10
 
 # using FAS for auth
-
 matrix-project:1.14
 matrix-auth:2.4.2
 openid:2.3
 
-# trying to force jms-messaging to show up post-build
-jms-messaging:1.1.9
+# we need a custom version of this for now
+#jms-messaging:1.1.9
+
