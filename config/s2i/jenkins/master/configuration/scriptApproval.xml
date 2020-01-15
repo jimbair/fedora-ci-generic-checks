@@ -31,8 +31,6 @@
     </pendingSignature>
     <pendingSignature>
       <context/>
-    <pendingSignature>
-      <context/>
       <signature>method java.lang.Class isAssignableFrom java.lang.Class</signature>
       <dangerous>false</dangerous>
     </pendingSignature>
