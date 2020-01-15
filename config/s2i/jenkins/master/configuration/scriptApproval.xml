@@ -18,6 +18,17 @@
   </aclApprovedSignatures>
   <approvedClasspathEntries/>
   <pendingScripts/>
-  <pendingSignatures/>
+  <pendingSignatures>
+    <pendingSignature>
+      <context/>
+      <signature>staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods getAt java.util.List java.util.Collection</signature>
+      <dangerous>false</dangerous>
+    </pendingSignature>
+    <pendingSignature>
+      <context reference="../../pendingSignature/context"/>
+      <signature>new java.lang.Exception java.lang.String java.lang.Throwable</signature>
+      <dangerous>false</dangerous>
+    </pendingSignature>
+  </pendingSignatures>
   <pendingClasspathEntries/>
 </scriptApproval>
