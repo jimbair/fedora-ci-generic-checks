@@ -10,6 +10,9 @@
     <string>staticMethod java.time.Instant now</string>
     <string>staticMethod org.codehaus.groovy.runtime.StackTraceUtils printSanitizedStackTrace java.lang.Throwable</string>
     <string>java.io.PrintWriter</string>
+    <string>staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods getAt java.util.List java.util.Collection</string>
+    <string>new java.lang.Exception java.lang.String java.lang.Throwable</string>
+    <string>new java.lang.Exception java.lang.String java.lang.Throwable</string>
   </approvedSignatures>
   <aclApprovedSignatures>
   </aclApprovedSignatures>
