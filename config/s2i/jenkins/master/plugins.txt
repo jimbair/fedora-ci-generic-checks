@@ -31,6 +31,6 @@ matrix-project:1.14
 matrix-auth:2.4.2
 openid:2.3
 
-# we need a custom version of this for now
-#jms-messaging:1.1.9
+# we need a custom version of this for now but init doesn't complete without a version installed
+jms-messaging:1.1.9
 
