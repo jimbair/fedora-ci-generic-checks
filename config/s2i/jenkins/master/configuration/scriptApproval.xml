@@ -29,6 +29,43 @@
       <signature>new java.lang.Exception java.lang.String java.lang.Throwable</signature>
       <dangerous>false</dangerous>
     </pendingSignature>
+    <pendingSignature>
+      <context/>
+    <pendingSignature>
+      <context/>
+      <signature>method java.lang.Class isAssignableFrom java.lang.Class</signature>
+      <dangerous>false</dangerous>
+    </pendingSignature>
+    <pendingSignature>
+      <context/>
+      <signature>method net.sf.json.JSONObject has java.lang.String</signature>
+      <dangerous>false</dangerous>
+    </pendingSignature>
+    <pendingSignature>
+      <context/>
+      <signature>staticMethod java.lang.Class forName java.lang.String</signature>
+      <dangerous>false</dangerous>
+    </pendingSignature>
+    <pendingSignature>
+      <context/>
+      <signature>staticMethod java.time.Instant now</signature>
+      <dangerous>false</dangerous>
+    </pendingSignature>
+    <pendingSignature>
+      <context/>
+      <signature>staticMethod org.codehaus.groovy.runtime.StackTraceUtils printSanitizedStackTrace java.lang.Throwable</signature>
+      <dangerous>false</dangerous>
+    </pendingSignature>
+    <pendingSignature>
+      <context/>
+      <signature>java.io.PrintWriter</signature>
+      <dangerous>false</dangerous>
+    </pendingSignature>
+    <pendingSignature>
+      <context/>
+      <signature>new java.lang.Exception java.lang.String java.lang.Throwable</signature>
+      <dangerous>false</dangerous>
+    </pendingSignature>
   </pendingSignatures>
   <pendingClasspathEntries/>
 </scriptApproval>
