@@ -37,7 +37,7 @@ echo "Execution complete, exit code $EXIT_CODE"
 echo "Converting json output into results.yaml"
 python3 /tmp/convert_result_json_yaml.py -o $TEST_ARTIFACTS/results.yaml $TEST_ARTIFACTS/rpminspect.json
 
-echo "Contents of converted yaml:"
+echo "Contents of converted yaml (see rpminspect.json for more details):"
 cat $TEST_ARTIFACTS/results.yaml
 
 exit $EXIT_CODE
