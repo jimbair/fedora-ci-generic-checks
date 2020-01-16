@@ -31,8 +31,8 @@ timestamps {
                             [[$class: 'CIBuildTrigger',
                               noSquash: true,
                               providerData: [
-                                  $class: 'FedMsgSubscriberProviderData',
-                                  name: 'fedora-fedmsg',
+                                  $class: 'RabbitMQSubscriberProviderData',
+                                  name: 'FedoraMessagingStage',
                                   overrides: [
                                       topic: 'org.fedoraproject.prod.buildsys.build.state.change'
                                   ],
