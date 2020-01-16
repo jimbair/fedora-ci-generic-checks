@@ -71,14 +71,14 @@ timestamps {
 
                     // set env vars needed for sending messages
                     buildCheckUtils.setDefaultEnvVars()
-                    buildCheckUtils.setScratchVars(parsedMsg)
+                    //buildCheckUtils.setScratchVars(parsedMsg)
                     }
                 }
 
                 stepName = 'schedule build'
                 stage(stepName) {
 
-                    if (primaryKoji && !env.isScratch.toBoolean()) {
+                    if (primaryKoji) {
                     checks = ['rpminspect']
                         for(checkname in checks) {
 
