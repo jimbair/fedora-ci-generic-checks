@@ -32,7 +32,7 @@ timestamps {
                               noSquash: true,
                               providerData: [
                                   $class: 'RabbitMQSubscriberProviderData',
-                                  name: 'FedoraMessagingStage',
+                                  name: 'FedoraMessaging',
                                   overrides: [
                                       topic: 'org.fedoraproject.prod.buildsys.build.state.change'
                                   ],
