@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set +e
 
 echo "starting run-rpminspect.sh script"
 
@@ -33,6 +33,12 @@ EXIT_CODE=`echo $?`
 
 
 echo "Execution complete, exit code $EXIT_CODE"
+
+if [ ! -f $TEST_ARTIFACTS/rpminspect.json ]
+then
+    echo "$TEST_ARTIFACTS/rpminspect.json does not exist, exiting"
+    exit 1
+fi
 
 echo "Converting json output into results.yaml"
 python3 /tmp/convert_result_json_yaml.py -o $TEST_ARTIFACTS/results.yaml $TEST_ARTIFACTS/rpminspect.json
