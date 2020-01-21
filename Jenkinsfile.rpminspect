@@ -194,7 +194,7 @@ timestamps {
                                 deleteDir()
                                 // Parse the CI_MESSAGE and inject it as a var
                                 print("parsing koji message")
-                                parsedMsg = kojiMessage(message: env.CI_MESSAGE, ignoreErrors: true)
+                                parsedMsg = buildCheckUtils.parseKojiMessage(message: env.CI_MESSAGE, ignoreErrors: false)
 
                                 print("parsed koji message")
                                 if (!env.PROVIDED_KOJI_TASKID?.trim()) {
