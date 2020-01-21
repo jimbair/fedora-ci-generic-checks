@@ -654,6 +654,7 @@ def parseKojiMessage(Map parameters = [:]) {
     def utils = new Utils()
 
     def parsedMsg = readJSON text: message.replace("\n", "\\n")
+    print parsedMsg
 
     try {
         parsedMsg['repo'] = utils.repoFromRequest(parsedMsg['request'][0])
