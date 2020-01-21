@@ -8,6 +8,8 @@ import groovy.json.JsonOutput
 import java.io.StringWriter
 import java.io.PrintWriter
 
+import org.centos.contra.pipeline.Utils
+
 /**
  * Library to check the dist branch to as rawhide should map to a release number
  * This value will begin with 'fc'
@@ -642,4 +644,29 @@ def testCompose(Map parameters = [:]) {
         }
         executeInContainer(containerName: container, containerScript: cmd)
     }
+}
+
+def parseKojiMessage(Map parameters = [:]) {
+
+    def message = parameters.get('msg', '{}')
+    def ignoreErrors = parameters.get('ignoreErrors', false)
+
+    def utils = new Utils()
+
+    def parsedMsg = readJSON text: message.replace("\n", "\\n")
+
+    try {
+        parsedMsg['repo'] = utils.repoFromRequest(parsedMsg['request'][0])
+        def branch = utils.setBuildBranch(parsedMsg['request'][1])
+        parsedMsg['branch'] = branch[0]
+        parsedMsg['repo_branch'] = branch[1]
+    } catch (e) {
+        if (ignoreErrors) {
+            println("Ignoring error message: " + e)
+        } else {
+            throw e
+        }
+    }
+
+    return parsedMsg
 }
