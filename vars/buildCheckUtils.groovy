@@ -293,4 +293,10 @@ class buildCheckUtils implements Serializable {
     def testCompose(Map parameters = [:]) {
         buildCheckUtils.testCompose(parameters)
     }
-}
+
+    /**
+     * parse rabbitmq message from koji
+     */
+    def parseKojiMessage(Map parameters = [:]) {
+        buildCheckUtils.parseKojiMessage(parameters)
+    }
