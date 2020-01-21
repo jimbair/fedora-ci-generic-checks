@@ -649,8 +649,9 @@ def testCompose(Map parameters = [:]) {
 def parseKojiMessage(Map parameters = [:]) {
 
     print "parameters: " + parameters
-    def message = parameters.get('message', '{}').get('msg', '{}')
+    def message = parameters.get('message', '{}')
     print "message: " + message
+    print "type of message is: " + message.getClass()
 
     def ignoreErrors = parameters.get('ignoreErrors', false)
 
