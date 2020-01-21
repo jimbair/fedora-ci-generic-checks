@@ -61,7 +61,8 @@ timestamps {
                     print "CI_MESSAGE"
                     print CI_MESSAGE
 
-                    parsedMsg = kojiMessage(message: env.CI_MESSAGE, ignoreErrors: true)
+                    //parsedMsg = kojiMessage(message: env.CI_MESSAGE, ignoreErrors: true)
+                    parsedMsg = kojiMessage(message: env.CI_MESSAGE, ignoreErrors: false)
                     primaryKoji = parsedMsg['instance'] == "primary"
                     env.task_id = parsedMsg['task_id']
                     currentBuild.displayName = "BUILD#: ${env.BUILD_NUMBER}"
@@ -82,6 +83,9 @@ timestamps {
                     checks = ['rpminspect']
                         for(checkname in checks) {
 
+                            print "Triggering for koji_taskid " + env.task_id
+                            print "message: " + env.CI_MESSAGE
+
                             retry(TRIGGER_RETRY_COUNT) {
                                 buildCheckUtils.handlePipelineStep(stepName: stepName, debug: true) {
 
@@ -92,8 +96,8 @@ timestamps {
                                     wait: false
                                 }
                             }
-                            messageFields = buildCheckUtils.setTestMessageFields("queued", artifact, parsedMsg)
-                            buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
+                            //messageFields = buildCheckUtils.setTestMessageFields("queued", artifact, parsedMsg)
+                            //buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
 
                         }
                     }
