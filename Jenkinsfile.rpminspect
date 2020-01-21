@@ -257,7 +257,8 @@ timestamps {
 
                                 // parse target envr into env var
                                 def json_message = readJSON text: env.CI_MESSAGE
-                                env.TARGET_ENVR = "${json_message['name']}-${json_message['version']}-${json_message['release']}"
+                                print "json_message: " + json_message.toString()
+                                env.TARGET_ENVR = "${json_message[['name']}-${json_message['version']}-${json_message['release']}"
 
                                 // Run functional tests
                                 try {
