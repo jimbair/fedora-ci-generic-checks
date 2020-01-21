@@ -64,7 +64,6 @@ timestamps {
 
                     //parsedMsg = kojiMessage(message: env.CI_MESSAGE, ignoreErrors: true)
                     parsedMsg = buildCheckUtils.parseKojiMessage(message: env.CI_MESSAGE, ignoreErrors: false)
-                    env.parsedMsg = parsedMsg
                     primaryKoji = parsedMsg['instance'] == "primary"
                     env.task_id = parsedMsg['task_id']
                     currentBuild.displayName = "BUILD#: ${env.BUILD_NUMBER}"
@@ -95,7 +94,7 @@ timestamps {
                                 build job: "fedora-${checkname}",
                                     // Scratch messages from task.state.changed call it id, not task_id
                                     parameters: [string(name: 'PROVIDED_KOJI_TASKID', value: env.task_id),
-                                                string(name: 'CI_MESSAGE', value: env.parsedMessage.toString())],
+                                                string(name: 'CI_MESSAGE', value: env.CI_MESSAGE)],
                                     wait: false
                                 }
                             }
