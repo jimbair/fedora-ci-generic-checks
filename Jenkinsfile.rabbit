@@ -62,7 +62,7 @@ timestamps {
                     print CI_MESSAGE
 
                     //parsedMsg = kojiMessage(message: env.CI_MESSAGE, ignoreErrors: true)
-                    parsedMsg = parseKojiMessage(message: env.CI_MESSAGE, ignoreErrors: false)
+                    parsedMsg = buildCheckUtils.parseKojiMessage(message: env.CI_MESSAGE, ignoreErrors: false)
                     primaryKoji = parsedMsg['instance'] == "primary"
                     env.task_id = parsedMsg['task_id']
                     currentBuild.displayName = "BUILD#: ${env.BUILD_NUMBER}"
