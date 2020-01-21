@@ -300,3 +300,4 @@ class buildCheckUtils implements Serializable {
     def parseKojiMessage(Map parameters = [:]) {
         buildCheckUtils.parseKojiMessage(parameters)
     }
+}
