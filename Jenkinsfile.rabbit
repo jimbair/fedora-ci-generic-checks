@@ -86,6 +86,7 @@ timestamps {
 
                             print "Triggering for koji_taskid " + env.task_id
                             print "message: " + env.CI_MESSAGE
+                            print "newmessage: " + parsedMsg.toString()
 
                             retry(TRIGGER_RETRY_COUNT) {
                                 buildCheckUtils.handlePipelineStep(stepName: stepName, debug: true) {
