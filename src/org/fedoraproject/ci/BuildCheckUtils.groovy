@@ -649,7 +649,7 @@ def testCompose(Map parameters = [:]) {
 def parseKojiMessage(Map parameters = [:]) {
 
     print "parameters: " + parameters
-    def message = parameters.get('msg', '{}')
+    def message = parameters.get('message', '{}').get('msg', '{}')
     print "message: " + message
 
     def ignoreErrors = parameters.get('ignoreErrors', false)
