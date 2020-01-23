@@ -209,6 +209,7 @@ timestamps {
                                 env.artifact = 'koji-build'
 
                                 // Scratch build messages store things in info
+                                buildCheckUtils.setScratchVars(parsedMsg)
                                 env.fed_repo = buildCheckUtils.repoFromRequest(env.request_0)
                                 branches = buildCheckUtils.setBuildBranch(env.request_1)
                                 env.branch = branches[0]
