@@ -1,3 +1,41 @@
+pipelineJob('jobdsl-trigger'){
+    triggers{
+        ciBuildTrigger{
+            noSquash(true)
+            providers {
+                providerDataEnvelope {
+                    providerData {
+                fedmsgSubscriber{
+                    name("FedoraMessaging")
+                    overrides {
+                        topic("org.fedoraproject.prod.buildsys.build.state.change")
+                    }
+                    checks {
+                        msgCheck {
+                            field("new")
+                            expectedValue("1|CLOSED")
+                        }
+                        msgCheck {
+                            field("release")
+                            expectedValue(".*fc.*")
+                        }
+                        msgCheck {
+                            field("instance")
+                            expectedValue("primary")
+                        }
+                    }
+                }
+                    }}
+            }
+        }
+    }
+    definition {
+        cps {
+            script(readFileFromWorkspace("src/jobs/trigger.groovy"))
+        }
+    }
+}
+
 pipelineJob('rpminspect-simple'){
 
     description 'Job to run checks on Fedora builds'
@@ -13,36 +51,6 @@ pipelineJob('rpminspect-simple'){
     // by datagrepper
     fedmsgRetryCount = 120
 
-//    triggers{
-//        ciBuildTrigger{
-//            noSquash(true)
-//            providers {
-//                providerDataEnvelope {
-//                    providerData {
-//                fedmsgSubscriber{
-//                    name("fedora-fedmsg")
-//                    overrides {
-//                        topic("org.fedoraproject.prod.buildsys.build.state.change")
-//                    }
-//                    checks {
-//                        msgCheck {
-//                            field("new")
-//                            expectedValue("1|CLOSED")
-//                        }
-//                        msgCheck {
-//                            field("release")
-//                            expectedValue(".*fc.*")
-//                        }
-//                        msgCheck {
-//                            field("instance")
-//                            expectedValue("primary")
-//                        }
-//                    }
-//                }
-//                    }}
-//            }
-//        }
-//    }
 //  scm {
 //    git {
 //      branch('develop')
@@ -66,13 +74,6 @@ pipelineJob('rpminspect-simple'){
         stringParam('RUNNING_ENVIRONMENT', 'stage', 'Which environment are we running in')
     }
 
-//    steps {
-//        dsl {
-//            // any job ending in Job.groovy will be deployed
-//            scriptText 'src/jobs/RpmInspectBasic.groovy'
-//            additionalClasspath 'src/main/groovy'
-//        }
-//    }
     definition {
         cps {
             script(readFileFromWorkspace("src/jobs/RpminspectBasic.groovy"))
