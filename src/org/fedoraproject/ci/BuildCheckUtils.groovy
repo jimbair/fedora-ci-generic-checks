@@ -501,7 +501,7 @@ def checkBranch(String branch) {
  * @param parsedMsg - The parsed fedmsg
  * @return
  */
-def setScratchVars(Map parsedMsg) {
+def setMessageEnvVars(Map parsedMsg) {
     if (parsedMsg.has('info')) {
         env.isScratch = true
         env.request_0 = parsedMsg['info']['request'][0]
