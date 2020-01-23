@@ -49,16 +49,17 @@ timestamps {
 //
 //    }
 
-    // Check out PR's version of library
-    library identifier: "upstream-fedora-pipeline@${env.ghprbActualCommit}",
-            retriever: modernSCM([$class: 'GitSCMSource',
-                                  remote: "https://github.com/${env.ghprbGhRepository}",
-                                  traits: [[$class: 'jenkins.plugins.git.traits.BranchDiscoveryTrait'],
-                                           [$class: 'RefSpecsSCMSourceTrait',
-                                            templates: [[value: '+refs/heads/*:refs/remotes/@{remote}/*'],
-                                                        [value: '+refs/pull/*:refs/remotes/origin/pr/*']]]]])
+//    // Check out PR's version of library
+//    library identifier: "upstream-fedora-pipeline@${env.ghprbActualCommit}",
+//            retriever: modernSCM([$class: 'GitSCMSource',
+//                                  remote: "https://github.com/${env.ghprbGhRepository}",
+//                                  traits: [[$class: 'jenkins.plugins.git.traits.BranchDiscoveryTrait'],
+//                                           [$class: 'RefSpecsSCMSourceTrait',
+//                                            templates: [[value: '+refs/heads/*:refs/remotes/@{remote}/*'],
+//                                                        [value: '+refs/pull/*:refs/remotes/origin/pr/*']]]]])
 
     //noinspection GroovyAssignabilityCheck
+    /*
     properties(
             [
                     buildDiscarder(logRotator(artifactDaysToKeepStr: '30', artifactNumToKeepStr: '100', daysToKeepStr: '90', numToKeepStr: '100')),
@@ -120,7 +121,7 @@ timestamps {
                             ]
                     ),
             ]
-    )
+    )*/
 
     podTemplate(name: podName,
                 label: podName,
@@ -163,7 +164,8 @@ timestamps {
         node(podName) {
 
     def libraries = ['cico-pipeline'           : ['master', 'https://github.com/CentOS/cico-pipeline-library.git'],
-                     'contra-lib'              : ['master', 'https://github.com/openshift/contra-lib.git']] // should probably pin this to a release
+                     'contra-lib'              : ['master', 'https://github.com/openshift/contra-lib.git'],
+                     'fedora-ci-generic-checks': ['feature/jobsdlattempt', 'https://github.com/tflink/fedora-ci-generic-checks.git']] // should probably pin this to a release
 
     libraries.each { name, repo ->
         library identifier: "${name}@${repo[0]}",
