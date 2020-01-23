@@ -204,14 +204,10 @@ timestamps {
 
                                 deleteDir()
                                 // Parse the CI_MESSAGE and inject it as a var
-                                print("parsing koji message")
                                 parsedMsg = buildCheckUtils.parseKojiMessage(message: env.CI_MESSAGE, ignoreErrors: false)
-                                print "parsedMsg: " + parsedMsg
-                                print("parsed koji message")
                                 env.artifact = 'koji-build'
-                                env.artifactOld = 'build'
+
                                 // Scratch build messages store things in info
-                                buildCheckUtils.setScratchVars(parsedMsg)
                                 env.fed_repo = buildCheckUtils.repoFromRequest(env.request_0)
                                 branches = buildCheckUtils.setBuildBranch(env.request_1)
                                 env.branch = branches[0]
