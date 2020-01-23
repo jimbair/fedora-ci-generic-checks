@@ -234,14 +234,8 @@ timestamps {
                         stage(env.currentStage) {
                             buildCheckUtils.handlePipelineStep(stepName: env.currentStage, debug: true) {
 
-                                // Set stage specific vars
+                                // Set vars for this specific stage
                                 stageVars = buildCheckUtils.setStageEnvVars(env.currentStage)
-
-                                // Set our message topic, properties, and content
-                                messageFields = buildCheckUtils.setTestMessageFields("package.test.running", artifact, parsedMsg)
-
-                                // Send message org.centos.prod.ci.pipeline.allpackages.package.test.functional.running on fedmsg
-                                buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
 
                                 // Prepare to send stage.complete message on failure
                                 env.messageStage = 'package.test.functional.complete'
@@ -286,13 +280,6 @@ timestamps {
                                     }
                                 }
 
-                                // Set our message topic, properties, and content
-                                //messageFields = buildCheckUtils.setTestMessageFields("package.test.functional.complete", artifact, parsedMsg)
-
-                                // Send koji-build.test.complete on job completion
-                                //buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
-
-
                             }
                         }
 
@@ -303,9 +290,7 @@ timestamps {
                         buildResult = 'FAILURE'
                         currentBuild.result = buildResult
 
-                        // Send message org.centos.prod.ci.pipeline.allpackages.<stage>.complete on fedmsg if stage failed
-                        messageFields = buildCheckUtils.setTestMessageFields(env.messageStage, artifact, parsedMsg)
-                        buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
+                        // we don't need to send a 'complete' status message here, will be done in finally block
 
                         // Send message org.centos.prod.ci.<artifact>.test.error on fedmsg
                         messageFields = buildCheckUtils.setTestMessageFields("error", artifact, parsedMsg)
