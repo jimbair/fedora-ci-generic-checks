@@ -79,7 +79,7 @@ pipelineJob('rpminspect-simple'){
 //    }
     definition {
         cps {
-            script(readFileFromWorkspace("src/jobs/RpmInspectBasic.groovy"))
+            script(readFileFromWorkspace("src/jobs/RpminspectBasic.groovy"))
         }
     }
 }
