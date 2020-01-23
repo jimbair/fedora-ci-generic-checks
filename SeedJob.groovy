@@ -5,7 +5,7 @@ pipelineJob('jobdsl-trigger'){
             providers {
                 providerDataEnvelope {
                     providerData {
-                rabbitmqSubscriber{
+                rabbitMQSubscriber{
                     name("FedoraMessaging")
                     overrides {
                         topic("org.fedoraproject.prod.buildsys.build.state.change")
