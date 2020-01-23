@@ -14,7 +14,8 @@ timestamps {
 
     // Initialize all the ghprb variables we need
     env.ghprbGhRepository = env.ghprbGhRepository ?: 'tflink/fedora-ci-generic-checks'
-    env.ghprbActualCommit = env.ghprbActualCommit ?: 'master'
+    //env.ghprbActualCommit = env.ghprbActualCommit ?: 'master'
+    env.ghprbActualCommit = env.ghprbActualCommit ?: 'feature/jobsdlattempt'
     env.ghprbPullAuthorLogin = env.ghprbPullAuthorLogin ?: ''
     env.ghprbPullId = env.ghprbPullId ?: ''
 

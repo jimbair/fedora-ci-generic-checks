@@ -68,6 +68,7 @@ pipelineJob('rpminspect-simple'){
         stringParam('OPENSHIFT_SERVICE_ACCOUNT', 'fedora-check-jenkins', 'OpenShift Service Account')
         stringParam('SLAVE_TAG', 'latest', 'tag for slave image')
         stringParam('FEDORACI_RUNNER_TAG', 'latest', 'tag for worker image')
+        stringParam('RUNNING_ENVIRONMENT', 'stage', 'Which environment are we running in')
     }
 
 //    steps {
