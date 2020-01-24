@@ -91,7 +91,8 @@ timestamps {
                             retry(TRIGGER_RETRY_COUNT) {
                                 buildCheckUtils.handlePipelineStep(stepName: stepName, debug: true) {
 
-                                build job: "fedora-${checkname}",
+                                //build job: "fedora-${checkname}",
+                                build job: "${checkname}-simple",
                                     // Scratch messages from task.state.changed call it id, not task_id
                                     parameters: [string(name: 'PROVIDED_KOJI_TASKID', value: env.task_id),
                                                 string(name: 'CI_MESSAGE', value: env.CI_MESSAGE)],
