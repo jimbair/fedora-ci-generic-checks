@@ -18,6 +18,9 @@ timestamps {
     // send staging messages
     env.MSG_PROVIDER = "fedora-fedmsg"
 
+    // we don't work with scratch builds for now
+    env.isScratch = false
+
     properties(
             [
                     buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '500', daysToKeepStr: '', numToKeepStr: '500')),
