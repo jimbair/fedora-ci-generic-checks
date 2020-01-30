@@ -335,7 +335,7 @@ def setDefaultEnvVars(Map envMap=null){
     // and the correct jms-messaging message provider
 
     if (!env.MSG_PROVIDER || env.MSG_PROVIDER == '') {
-        if (env.ghprbActualCommit != null && (env.ghprbActualCommit != "master" || env.ghprbPullId != "")) {
+        if (env.RUNNING_ENVIRONMENT == "stage") {
             //env.MSG_PROVIDER = "fedora-fedmsg-stage"
             env.MSG_PROVIDER = "FedoraMessagingStage"
         } else {
@@ -354,10 +354,10 @@ def setDefaultEnvVars(Map envMap=null){
 
     env.basearch = env.basearch ?: 'x86_64'
     env.commit = env.commit ?: ''
-    env.FEDORA_PRINCIPAL = env.FEDORA_PRINCIPAL ?: 'bpeck/jenkins-continuous-infra.apps.ci.centos.org@FEDORAPROJECT.ORG'
     env.nvr = env.nvr ?: ''
     env.original_spec_nvr = env.original_spec_nvr ?: ''
-    env.ANSIBLE_HOST_KEY_CHECKING = env.ANSIBLE_HOST_KEY_CHECKING ?: 'False'
+
+    // probably OK to remove but it's still used by a Jenkinsfile right now
     env.jobMeasurement = env.JOB_NAME
     env.packageMeasurement = env.fed_repo
 
@@ -501,7 +501,7 @@ def checkBranch(String branch) {
  * @param parsedMsg - The parsed fedmsg
  * @return
  */
-def setScratchVars(Map parsedMsg) {
+def setMessageEnvVars(Map parsedMsg) {
     if (parsedMsg.has('info')) {
         env.isScratch = true
         env.request_0 = parsedMsg['info']['request'][0]

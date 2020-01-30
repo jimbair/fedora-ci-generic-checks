@@ -250,8 +250,8 @@ class buildCheckUtils implements Serializable {
      * @param parsedMsg - The parsed fedmsg
      * @return
      */
-    def setScratchVars(Map parsedMsg) {
-        buildCheckUtils.setScratchVars(parsedMsg)
+    def setMessageEnvVars(Map parsedMsg) {
+        buildCheckUtils.setMessageEnvVars(parsedMsg)
     }
 
     /**
