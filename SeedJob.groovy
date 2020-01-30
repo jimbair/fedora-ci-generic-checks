@@ -1,4 +1,4 @@
-pipelineJob('jobdsl-trigger'){
+pipelineJob('fedora-messaging-trigger'){
     triggers{
         ciBuildTrigger{
             noSquash(true)
@@ -36,7 +36,7 @@ pipelineJob('jobdsl-trigger'){
     }
 }
 
-pipelineJob('rpminspect-simple'){
+pipelineJob('fedora-rpminspect'){
 
     description 'Job to run checks on Fedora builds'
 
@@ -51,16 +51,6 @@ pipelineJob('rpminspect-simple'){
     // by datagrepper
     fedmsgRetryCount = 120
 
-//  scm {
-//    git {
-//      branch('develop')
-//      remote {
-//        name('upstream')
-//        // replace this with whever you put this repo
-//        url('https://pagure.io/fedora-ci-generic-checks.git')
-//      }
-//    }
-//  }
 
 
     parameters{

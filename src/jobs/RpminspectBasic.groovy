@@ -9,7 +9,6 @@ import org.codehaus.groovy.runtime.StackTraceUtils
 
 timestamps {
     // CANNED CI_MESSAGE
-    //def CANNED_CI_MESSAGE = '{"build_id":1404149,"old":0,"name":"mirrormanager2","task_id":38507123,"attribute":"state","request":["git+https://src.fedoraproject.org/rpms/mirrormanager2.git#763ae90d00b4735a32c96407103e4a4e31360de6","f30-candidate",{}],"instance":"primary","epoch":null,"version":"0.11","owner":"adrian","new":1,"release":"1.fc30"}'
     def CANNED_CI_MESSAGE = '{"deliveryTag":584,"msg":{"attribute":"state","build_id":1430989,"epoch":null,"instance":"primary","name":"file-roller","new":1,"old":0,"owner":"kalev","release":"1.fc32","request":["git+https://src.fedoraproject.org/rpms/file-roller.git#e00aa0590662351c540d0a2782382ee45fa6bba5","f32-build-side-18035",{"skip_tag":true}],"task_id":40809920,"version":"3.35.1"},"msg_id":"6b5854b1-550e-4bf7-b145-fa6c406903e1","timestamp":1579599505254,"topic":"org.fedoraproject.prod.buildsys.build.state.change"}'
 
     // Initialize all the ghprb variables we need
@@ -38,90 +37,6 @@ timestamps {
 
     // Number of CPU cores for the package-checks container
     runnerCpuLimit = '1'
-
-//    def libraries = ['cico-pipeline'           : ['master', 'https://github.com/CentOS/cico-pipeline-library.git'],
-//                     'contra-lib'              : ['master', 'https://github.com/openshift/contra-lib.git']] // should probably pin this to a release
-//
-//    libraries.each { name, repo ->
-//        library identifier: "${name}@${repo[0]}",
-//                retriever: modernSCM([$class: 'GitSCMSource',
-//                                      remote: repo[1]])
-//
-//    }
-
-//    // Check out PR's version of library
-//    library identifier: "upstream-fedora-pipeline@${env.ghprbActualCommit}",
-//            retriever: modernSCM([$class: 'GitSCMSource',
-//                                  remote: "https://github.com/${env.ghprbGhRepository}",
-//                                  traits: [[$class: 'jenkins.plugins.git.traits.BranchDiscoveryTrait'],
-//                                           [$class: 'RefSpecsSCMSourceTrait',
-//                                            templates: [[value: '+refs/heads/*:refs/remotes/@{remote}/*'],
-//                                                        [value: '+refs/pull/*:refs/remotes/origin/pr/*']]]]])
-
-    //noinspection GroovyAssignabilityCheck
-    /*
-    properties(
-            [
-                    buildDiscarder(logRotator(artifactDaysToKeepStr: '30', artifactNumToKeepStr: '100', daysToKeepStr: '90', numToKeepStr: '100')),
-                    [$class: 'JobPropertyImpl', throttle: [count: 150, durationName: 'hour', userBoost: false]],
-                    parameters(
-                            [
-                                    string(name: 'PROVIDED_KOJI_TASKID',
-                                           defaultValue: '38507123',
-                                           description: 'Give an integer only task id to use those artifacts and bypass the rpm build stage (example 123456)'),
-                                    string(name: 'ghprbActualCommit',
-                                           // setting this to develop for now for testing
-                                           defaultValue: 'develop',
-                                           description: 'The GitHub pull request commit'),
-                                    string(name: 'ghprbGhRepository',
-                                           defaultValue: '',
-                                           description: 'The repo the PR is against'),
-                                    string(name: 'sha1',
-                                           defaultValue: '',
-                                           description: ''),
-                                    string(name: 'ghprbPullId',
-                                           defaultValue: '',
-                                           description: 'Pull Request Number'),
-                                    string(name: 'ghprbPullAuthorLogin',
-                                           defaultValue: '',
-                                           description: 'Pull Request Author username'),
-                                    string(name: 'SLAVE_TAG',
-                                           defaultValue: 'latest',
-                                           description: 'Tag for slave image'),
-                                    string(name: 'FEDORACI_RUNNER_TAG',
-                                           defaultValue: 'latest',
-                                           description: 'Tag for package-checks image'),
-                                    string(name: 'DOCKER_REPO_URL',
-                                           defaultValue: '172.30.254.79:5000',
-                                           description: 'Docker repo url for Openshift instance'),
-                                    string(name: 'OPENSHIFT_NAMESPACE',
-                                           defaultValue: 'fedora-package-checks',
-                                           description: 'Project namespace for Openshift operations'),
-                                    string(name: 'OPENSHIFT_SERVICE_ACCOUNT',
-                                           defaultValue: 'fedora-check-jenkins',
-                                           description: 'Service Account for Openshift operations'),
-                                    string(name: 'MSG_PROVIDER',
-                                           defaultValue: '',
-                                           description: 'Main provider to send messages on'),
-                                    string(name: 'KOJI_URL',
-                                           defaultValue: '',
-                                           description: 'Overwrites the default koji url'),
-                                    string(name: 'KOJI_PARAMS',
-                                           defaultValue: '',
-                                           description: 'Parameters to pass to koji tool'),
-                                    string(name: 'PAGURE_URL',
-                                           defaultValue: '',
-                                           description: 'Pagure instance url'),
-                                    string(name: 'CI_MESSAGE',
-                                           defaultValue: CANNED_CI_MESSAGE,
-                                           description: 'CI_MESSAGE'),
-                                    string(name: 'pipelineId',
-                                           defaultValue: '',
-                                           description: 'UUID for this pipeline run')
-                            ]
-                    ),
-            ]
-    )*/
 
     podTemplate(name: podName,
                 label: podName,
