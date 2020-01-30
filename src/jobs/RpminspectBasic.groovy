@@ -21,7 +21,7 @@ timestamps {
     // Task ID to bypass rpm build and grab artifacts from koji
     env.PROVIDED_KOJI_TASKID = env.PROVIDED_KOJI_TASKID ?: ''
     // Default to build being scratch, will be overridden if triggered by nonscratch build
-    env.isScratch = true
+    //env.isScratch = true
     env.PAGURE_URL = env.PAGURE_URL ?: 'https://src.fedoraproject.org'
 
     // Needed for podTemplate()

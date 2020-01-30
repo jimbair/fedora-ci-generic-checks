@@ -70,7 +70,7 @@ timestamps {
 
                     // set env vars needed for sending messages
                     buildCheckUtils.setDefaultEnvVars()
-                    buildCheckUtils.setScratchVars(parsedMsg)
+                    //buildCheckUtils.setScratchVars(parsedMsg)
                     }
                 }
 
