@@ -47,10 +47,10 @@ RUN mkdir -p /tmp/workspace/fedora-build-check
 COPY rpminspect-fedora.conf /tmp/
 
 # Copy the rpminspect data tarball
-COPY 20190618-rpminspect-redhat-data.tar.gz /tmp/
+#COPY 20190618-rpminspect-redhat-data.tar.gz /tmp/
 
 # Extract the rpminspect data
-RUN tar -xzf /tmp/20190618-rpminspect-redhat-data.tar.gz -C /usr/share/rpminspect
+#RUN tar -xzf /tmp/20190618-rpminspect-redhat-data.tar.gz -C /usr/share/rpminspect
 
 # Copy the build scripts to the container
 COPY run-rpminspect.sh /tmp/
