@@ -36,8 +36,8 @@ def process_json(json_data):
         testcase_name = testcase.lower().replace(' ', '-')
         result_string = json_data[testcase][0]['result'].lower()
 
-        # assuming that 'ok' is 'pass' and anything else is 'fail'
-        result = {'test':'dist.rpminspect.{}'.format(testcase_name), 'result':'pass' if result_string == 'ok' else 'fail'}
+        # assuming that 'ok' and 'info' correlate to 'pass' and anything else is 'fail'
+        result = {'test':'dist.rpminspect.{}'.format(testcase_name), 'result':'pass' if result_string in ['ok', 'info'] else 'fail'}
         results.append(result)
 
     return {"results": results}
