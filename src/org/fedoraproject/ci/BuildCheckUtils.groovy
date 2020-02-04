@@ -187,7 +187,7 @@ def setTestMessageFields(String messageType, String artifact, Map parsedMsg) {
         myBranch = env.fed_branch
 
         myArtifactContent = msgBusArtifactContent(type: 'koji-build', id: myId, component: myComponent, issuer: myIssuer, nvr: myNvr, scratch: myScratch, source: env.RPM_REQUEST_SOURCE)
-        myTestContent = (messageType == "complete") ? msgBusTestContent(category: "static-analysis", namespace: myNamespace, type: "tier0", result: myResult) : msgBusTestContent(category: "functional", namespace: myNamespace, type: "tier0")
+        myTestContent = (messageType == "complete") ? msgBusTestContent(category: "static-analysis", namespace: myNamespace, type: myType, result: myResult) : msgBusTestContent(category: "functional", namespace: myNamespace, type: myType)
     }
     if (artifact == "dist-git-pr") {
         // Set variables that go in multiple closures
