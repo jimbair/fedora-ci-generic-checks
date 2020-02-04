@@ -41,9 +41,9 @@ then
 fi
 
 echo "Converting json output into results.yaml"
-python3 /tmp/process_rpminspect_json.py -o $TEST_ARTIFACTS/results.yaml $TEST_ARTIFACTS/rpminspect.json
+python3 /tmp/process_rpminspect_json.py -t yaml -o $TEST_ARTIFACTS/results.yaml $TEST_ARTIFACTS/rpminspect.json
 
-echo "Contents of converted yaml (see rpminspect.json for more details):"
-cat $TEST_ARTIFACTS/results.yaml
+# output more human-understandable text
+python3 /tmp/process_rpminspect_json.py $TEST_ARTIFACTS/rpminspect.json
 
 exit $EXIT_CODE
