@@ -145,7 +145,7 @@ def setTestMessageFields(String messageType, String artifact, Map parsedMsg) {
     myResult = myResult.toLowerCase()
 
     // Create common message body content
-    myContactContent = msgBusContactContent(name: "fedora-ci", team: "fedora-ci", irc: "#fedora-ci", email: "ci@lists.fedoraproject.org", docs: 'https://pagure.io/standard-test-roles')
+    myContactContent = msgBusContactContent(name: "fedora-ci", team: "fedora-ci", irc: "#fedora-ci", email: "ci@lists.fedoraproject.org", docs: 'https://github.com/tflink/fedora-ci-generic-checks')
     myStageContent = msgBusStageContent(name: env.currentStage)
     myPipelineContent = msgBusPipelineContent(id: env.pipelineId, stage: myStageContent())
     // The run array is filled in properly with its defaults
@@ -182,7 +182,7 @@ def setTestMessageFields(String messageType, String artifact, Map parsedMsg) {
         myNvr = env.nvr
         myComponent = env.fed_repo
         myRepository = myComponent ? "${env.PAGURE_URL}/rpms/" + myComponent : 'N/A'
-        myType = 'tier0'
+        myType = 'rpminspect'
         myIssuer =  parsedMsg['owner']
         myBranch = env.fed_branch
 
@@ -217,7 +217,7 @@ def setTestMessageFields(String messageType, String artifact, Map parsedMsg) {
             if (artifact == "dist-git-pr") {
                 myArtifactContent = msgBusArtifactContent(type: 'pull-request', id: myId, issuer: myIssuer, repository: myRepository, commit_hash: myCommitHash, comment_id: myCommentId, uid: myUid)
             }
-            mySystemContent = msgBusSystemContent(label: "upstream-fedora-pipeline", os: myBranch, provider: "CentOS CI", architecture: "x86_64", variant: "Cloud")
+            mySystemContent = msgBusSystemContent(label: "fedora-build-checks", os: myBranch, provider: "CentOS CI", architecture: "x86_64", variant: "Docker")
             myConstructedMessage = msgBusTestComplete(contact: myContactContent(), artifact: myArtifactContent(), pipeline: myPipelineContent(), test: myTestContent(), system: [mySystemContent()])
             break
         case 'error':
