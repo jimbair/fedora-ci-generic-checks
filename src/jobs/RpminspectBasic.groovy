@@ -156,7 +156,7 @@ timestamps {
                                 stageVars = buildCheckUtils.setStageEnvVars(env.currentStage)
 
                                 // Prepare to send stage.complete message on failure
-                                env.messageStage = 'package.test.functional.complete'
+                                env.messageStage = 'complete'
 
                                 // parse target envr into env var
                                 def json_message = readJSON text: env.CI_MESSAGE
