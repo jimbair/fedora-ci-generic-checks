@@ -66,7 +66,7 @@ timestamps {
                     parsedMsg = buildCheckUtils.parseKojiMessage(message: env.CI_MESSAGE, ignoreErrors: false)
                     primaryKoji = parsedMsg['instance'] == "primary"
                     env.task_id = parsedMsg['task_id']
-                    currentBuild.displayName = "BUILD#: ${env.BUILD_NUMBER}"
+                    currentBuild.displayName = "TRIGGER#: ${env.BUILD_NUMBER}"
 
                     // we only care about koji-builds for now
                     env.artifact = 'koji-build'

@@ -116,6 +116,9 @@ timestamps {
                         env.currentStage = "prepare-environment"
                         env.messageStage = "running"
 
+                        // set the display prefix
+                        currentBuild.displayName = "RPMINSPECT#: ${env.BUILD_NUMBER}"
+
                         stage(env.currentStage) {
 
                             buildCheckUtils.handlePipelineStep('stepName': env.currentStage, 'debug': true) {
