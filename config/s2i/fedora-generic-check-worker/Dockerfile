@@ -54,7 +54,7 @@ COPY rpminspect-fedora.conf /tmp/
 
 # Copy the build scripts to the container
 COPY run-rpminspect.sh /tmp/
-COPY convert_result_json_yaml.py /tmp/
+COPY process_rpminspect_json.py /tmp/
 
 # Run the build script
 # assumes that target ENVR is available as $TARGET_ENVR
