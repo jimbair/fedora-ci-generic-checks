@@ -163,12 +163,19 @@ timestamps {
                                 print "json_message: " + json_message.toString()
                                 env.TARGET_ENVR = "${json_message['msg']['name']}-${json_message['msg']['version']}-${json_message['msg']['release']}"
 
+                                // for rpminspect, 0 and 1 are OK exist codes for rpminspect
+                                // 0 indicates pass
+                                // 1 indicates failure
+                                // >=2 indicates execution failure, not test failure
+                                def okExitCodes = [0,1]
+
                                 // Run functional tests
                                 try {
-                                    buildCheckUtils.executeInContainer(containerName: "package-checks",
-                                                                            containerScript: "/tmp/run-rpminspect.sh",
-                                                                            stageVars: stageVars,
-                                                                            stageName: env.currentStage)
+                                    exitCode = buildCheckUtils.executeInContainer(containerName: "package-checks",
+                                                                                  containerScript: "/tmp/run-rpminspect.sh",
+                                                                                  stageVars: stageVars,
+                                                                                  stageName: env.currentStage,
+                                                                                  okExitCodes: okExitCodes)
                                 } catch(e) {
                                     if (fileExists("${WORKSPACE}/${env.currentStage}/logs/test.log")) {
                                         buildResult = 'UNSTABLE'
@@ -180,22 +187,21 @@ timestamps {
                                     }
                                 }
 
-                                if (fileExists("${WORKSPACE}/${env.currentStage}/logs/results.yml")) {
-                                    def test_results = readYaml file: "${WORKSPACE}/${env.currentStage}/logs/results.yml"
-                                    def test_failed = false
-                                    test_results['results'].each { result ->
-                                        // some test case exited with error
-                                        // handle this as test failure and not as infra one
-                                        if (result.result == "error") {
-                                            test_failed = true
-                                        }
-                                        if (result.result == "fail") {
-                                            test_failed = true
-                                        }
-                                    }
-                                    if (test_failed) {
-                                        currentBuild.result = 'UNSTABLE'
-                                    }
+                                // check to make sure that the output files we need exist
+                                if (!fileExists("${WORKSPACE}/${env.currentStage}/logs/rpminspect.json")||
+                                    !fileExists("${WORKSPACE}/${env.currentStage}/logs/results.yml")) {
+                                    error "rpminspect.json and results.yml files do not exist in output, error state"
+                                }
+
+                                def test_failed = false
+                                // for rpminspect, we determine pass/fail based on exit code
+                                switch(exitCode) {
+                                    case 0:
+                                    buildResult = 'SUCCESS'
+                                    case 1:
+                                    buildResult = 'FAILURE'
+                                    default:
+                                    buildResult = 'UNSTABLE'
                                 }
 
                             }
@@ -205,14 +211,14 @@ timestamps {
 
                     } catch (e) {
                         // Set build result
-                        buildResult = 'FAILURE'
+                        buildResult = 'UNSTABLE'
                         currentBuild.result = buildResult
 
                         // we don't need to send a 'complete' status message here, will be done in finally block
-
+                        // only send messages once - this is done in the finally block
                         // Send message org.centos.prod.ci.<artifact>.test.error on fedmsg
-                        messageFields = buildCheckUtils.setTestMessageFields("error", artifact, parsedMsg)
-                        buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
+                        //messageFields = buildCheckUtils.setTestMessageFields("error", artifact, parsedMsg)
+                        //buildCheckUtils.sendMessage(messageFields['topic'], messageFields['properties'], messageFields['content'])
 
                         // Report the exception
                         echo "Error: Exception from " + env.currentStage + ":"

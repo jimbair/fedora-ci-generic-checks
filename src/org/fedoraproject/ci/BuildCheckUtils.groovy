@@ -274,13 +274,14 @@ def prepareCredentials(String credentials) {
  * Container must have been defined in a podTemplate
  *
  * @param parameters
- * @return
+ * @return exit code of the script executed
  */
 def executeInContainer(Map parameters) {
     def containerName = parameters.get('containerName')
     def containerScript = parameters.get('containerScript')
     def stageName = parameters.get('stageName', env.STAGE_NAME)
     def stageVars = parameters.get('stageVars', [:])
+    def okExitCodes = parameters.get('okExitCodes', [0])
 
     def stageDir = "${WORKSPACE}/${stageName}"
     //
@@ -295,10 +296,18 @@ def executeInContainer(Map parameters) {
     }
 
     sh script: "mkdir -p ${stageDir}", label: "Creating directory ${stageDir}"
+
+    // catch the exit code of the script
+    def exitCode = 0
+
     try {
         withEnv(containerEnv) {
             container(containerName) {
-                sh containerScript
+                exitCode = sh script: containerScript, returnValue: true
+            }
+
+            if (!okExitCodes.contains(exitCode) {
+                error "shell script exited with " + exitCode + ". OK exit codes were " + okExitCodes.toString()
             }
         }
     } catch (err) {
