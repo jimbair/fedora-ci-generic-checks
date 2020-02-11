@@ -306,7 +306,7 @@ def executeInContainer(Map parameters) {
                 exitCode = sh script: containerScript, returnValue: true
             }
 
-            if (!okExitCodes.contains(exitCode) {
+            if (!okExitCodes.contains(exitCode)) {
                 error "shell script exited with " + exitCode + ". OK exit codes were " + okExitCodes.toString()
             }
         }
