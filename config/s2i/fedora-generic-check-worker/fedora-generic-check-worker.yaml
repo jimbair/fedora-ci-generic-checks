@@ -35,6 +35,7 @@ objects:
         env:
           - name: CONTAINER_NAME
             value: fedora-generic-check-worker
+        noCache: false
       type: Docker
     triggers:
     - type: ConfigChange
