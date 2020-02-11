@@ -188,9 +188,11 @@ timestamps {
                                 }
 
                                 // check to make sure that the output files we need exist
-                                if (!fileExists("${WORKSPACE}/${env.currentStage}/logs/rpminspect.json")||
-                                    !fileExists("${WORKSPACE}/${env.currentStage}/logs/results.yml")) {
-                                    error "rpminspect.json and results.yml files do not exist in output, error state"
+                                if (!fileExists("${WORKSPACE}/${env.currentStage}/logs/rpminspect.json")) {
+                                    error "rpminspect.json file does not exist in output, error state"
+                                }
+                                if (!fileExists("${WORKSPACE}/${env.currentStage}/logs/results.yml")) {
+                                    error "results.yaml file does not exist in output, error state"
                                 }
 
                                 def test_failed = false
