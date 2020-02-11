@@ -188,8 +188,7 @@ timestamps {
                                 }
 
                                 // check to make sure that the output files we need exist
-                                sh "ls ${WORKSPACE}/${env.currentStage}/logs"
-                                if (!fileExists("${WORKSPACE}/${env.currentStage}/logs/results.yml")) {
+                                if (!fileExists("${WORKSPACE}/${env.currentStage}/logs/results.yaml")) {
                                     error "results.yaml file does not exist in log files, error state"
                                 }
                                 if (!fileExists("${WORKSPACE}/${env.currentStage}/logs/rpminspect.json")) {
