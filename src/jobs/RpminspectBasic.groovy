@@ -152,6 +152,9 @@ timestamps {
                         stage(env.currentStage) {
                             buildCheckUtils.handlePipelineStep(stepName: env.currentStage, debug: true) {
 
+                                // debug for finding license file
+                                sh "ls /usr/share/rpminspect/licenses/"
+
                                 // Set vars for this specific stage
                                 stageVars = buildCheckUtils.setStageEnvVars(env.currentStage)
 
