@@ -206,6 +206,7 @@ timestamps {
                                     buildResult = 'UNSTABLE'
                                 }
                                 echo "buildResult after exit code switch is ${buildResult}"
+                                echo "exit code is ${exitCode}"
 
                             }
                         }
