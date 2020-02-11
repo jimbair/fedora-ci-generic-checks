@@ -160,7 +160,7 @@ timestamps {
 
                                 // parse target envr into env var
                                 def json_message = readJSON text: env.CI_MESSAGE
-                                print "json_message: " + json_message.toString()
+                                //print "json_message: " + json_message.toString()
                                 env.TARGET_ENVR = "${json_message['msg']['name']}-${json_message['msg']['version']}-${json_message['msg']['release']}"
 
                                 // for rpminspect, 0 and 1 are OK exist codes for rpminspect
@@ -205,8 +205,6 @@ timestamps {
                                     default:
                                     buildResult = 'UNSTABLE'
                                 }
-                                echo "buildResult after exit code switch is ${buildResult}"
-                                echo "exit code is ${exitCode}"
 
                             }
                         }

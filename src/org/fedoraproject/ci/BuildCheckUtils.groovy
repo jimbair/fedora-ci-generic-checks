@@ -659,10 +659,10 @@ def testCompose(Map parameters = [:]) {
 
 def parseKojiMessage(Map parameters = [:]) {
 
-    print "parameters: " + parameters
+    //print "parameters: " + parameters
     def message = parameters.get('message', '{}')
-    print "message: " + message
-    print "type of message is: " + message.getClass()
+    //print "message: " + message
+    //print "type of message is: " + message.getClass()
 
     def ignoreErrors = parameters.get('ignoreErrors', false)
 
@@ -670,7 +670,7 @@ def parseKojiMessage(Map parameters = [:]) {
 
     def oldparsedMsg = readJSON text: message.replace("\n", "\\n")
     def parsedMsg = oldparsedMsg.get('msg', '{}')
-    print "parsedMsg: " + parsedMsg
+    //print "parsedMsg: " + parsedMsg
 
     try {
         parsedMsg['repo'] = utils.repoFromRequest(parsedMsg['request'][0])
