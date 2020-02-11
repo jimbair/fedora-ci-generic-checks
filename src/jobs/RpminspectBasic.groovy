@@ -188,6 +188,7 @@ timestamps {
                                 }
 
                                 // check to make sure that the output files we need exist
+                                sh "ls ${WORKSPACE}/${env.currentStage}/logs"
                                 if (!fileExists("${WORKSPACE}/${env.currentStage}/logs/rpminspect.json")) {
                                     error "rpminspect.json file does not exist in output, error state"
                                 }
