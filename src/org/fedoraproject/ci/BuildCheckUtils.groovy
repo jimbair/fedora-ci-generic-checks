@@ -321,6 +321,8 @@ def executeInContainer(Map parameters) {
             sh script: "mv job.props ${stageDir}/job.props", label: "Moving job.props to the ${stageDir}/job.props"
         }
     }
+
+    return exitCode
 }
 
 /**
