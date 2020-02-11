@@ -199,8 +199,10 @@ timestamps {
                                 switch(exitCode) {
                                     case 0:
                                     buildResult = 'SUCCESS'
+                                    break
                                     case 1:
                                     buildResult = 'FAILURE'
+                                    break
                                     default:
                                     buildResult = 'UNSTABLE'
                                 }
