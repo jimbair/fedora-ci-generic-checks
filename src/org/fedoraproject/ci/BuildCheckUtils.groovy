@@ -303,7 +303,7 @@ def executeInContainer(Map parameters) {
     try {
         withEnv(containerEnv) {
             container(containerName) {
-                def exitCode = sh script: containerScript, returnValue: true
+                exitCode = sh script: containerScript, returnStatus: true
             }
 
             if (!okExitCodes.contains(exitCode)) {
