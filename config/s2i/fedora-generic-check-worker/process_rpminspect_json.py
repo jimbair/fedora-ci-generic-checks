@@ -102,7 +102,7 @@ def generate_output(data):
     output = []
     output.append('rpminspect output for humans - see rpminspect.json for full details')
     output.append('Overall Result: {}'.format(data['status']))
-    output.append('NOT PASSED:')
+    output.append('NOT PASSED items:')
     for fail_result in data['not-passed']:
         output.append('  {}:'.format(fail_result['name']))
         for testcase_item in fail_result['items']:
@@ -110,7 +110,7 @@ def generate_output(data):
             output.append('    remedy: {}'.format(testcase_item['remedy']))
             output.append('')
 
-    output.append('PASSED:')
+    output.append('PASSED items:')
     for pass_result in data['passed']:
         output.append('  {}'.format(pass_result['name']))
 
