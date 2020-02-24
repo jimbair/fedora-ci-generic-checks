@@ -350,7 +350,7 @@ def setDefaultEnvVars(Map envMap=null){
             //env.MSG_PROVIDER = "fedora-fedmsg-stage"
             env.MSG_PROVIDER = "FedoraMessagingStage"
         } else {
-            env.MSG_PROVIDER = "fedora-fedmsg"
+            env.MSG_PROVIDER = "FedoraMessaging"
         }
     }
     if (env.MSG_PROVIDER == "FedoraMessagingStage" ){
