@@ -80,7 +80,7 @@ timestamps {
 
     def libraries = ['cico-pipeline'           : ['master', 'https://github.com/CentOS/cico-pipeline-library.git'],
                      'contra-lib'              : ['master', 'https://github.com/openshift/contra-lib.git'],
-                     'fedora-ci-generic-checks': ['develop', 'https://github.com/tflink/fedora-ci-generic-checks.git']] // should probably pin this to a release
+                     'fedora-ci-generic-checks': ['master', 'https://github.com/tflink/fedora-ci-generic-checks.git']] // should probably pin this to a release
 
     libraries.each { name, repo ->
         library identifier: "${name}@${repo[0]}",
