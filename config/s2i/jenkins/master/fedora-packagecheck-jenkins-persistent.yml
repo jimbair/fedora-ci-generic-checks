@@ -264,5 +264,5 @@ parameters:
   value: https://github.com/tflink/fedora-ci-generic-checks.git
 - description: Git branch/tag reference
   name: REPO_REF
-  value: develop
+  value: master
 
