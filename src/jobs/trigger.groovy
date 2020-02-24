@@ -26,7 +26,7 @@ timestamps {
                     buildDiscarder(logRotator(artifactDaysToKeepStr: '240', daysToKeepStr: '240')),
                     parameters(
                             [
-                                    string(description: 'FedoraMessagingStage', defaultValue: CANNED_CI_MESSAGE, name: 'CI_MESSAGE')
+                                    string(description: 'FedoraMessaging', defaultValue: CANNED_CI_MESSAGE, name: 'CI_MESSAGE')
                             ]
                     ),
                     pipelineTriggers(
