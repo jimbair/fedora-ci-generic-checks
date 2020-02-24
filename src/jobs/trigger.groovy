@@ -23,7 +23,7 @@ timestamps {
 
     properties(
             [
-                    buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '500', daysToKeepStr: '', numToKeepStr: '500')),
+                    buildDiscarder(logRotator(artifactDaysToKeepStr: '240', daysToKeepStr: '240')),
                     parameters(
                             [
                                     string(description: 'FedoraMessagingStage', defaultValue: CANNED_CI_MESSAGE, name: 'CI_MESSAGE')
