@@ -21,20 +21,20 @@ metadata:
     tags: instant-app,jenkins
   name: fedora-packagecheck-jenkins-persistent
 objects:
-    #- apiVersion: v1
-    #  kind: Route
-    #  metadata:
-    #    annotations:
-    #      haproxy.router.openshift.io/timeout: 4m
-    #      template.openshift.io/expose-uri: http://{.spec.host}{.spec.path}
-    #    name: ${JENKINS_SERVICE_NAME}
-    #  spec:
-    #    tls:
-    #      insecureEdgeTerminationPolicy: Redirect
-    #      termination: edge
-    #    to:
-    #      kind: Service
-    #      name: ${JENKINS_SERVICE_NAME}
+    - apiVersion: v1
+      kind: Route
+      metadata:
+        annotations:
+          haproxy.router.openshift.io/timeout: 4m
+          template.openshift.io/expose-uri: http://{.spec.host}{.spec.path}
+        name: ${JENKINS_SERVICE_NAME}
+      spec:
+        tls:
+          insecureEdgeTerminationPolicy: Redirect
+          termination: edge
+        to:
+          kind: Service
+          name: ${JENKINS_SERVICE_NAME}
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -42,16 +42,16 @@ objects:
       app: jenkins
     name: jenkins
 
-    #- apiVersion: v1
-    #  kind: PersistentVolumeClaim
-    #  metadata:
-    #    name: ${JENKINS_SERVICE_NAME}
-    #  spec:
-    #    accessModes:
-    #    - ReadWriteOnce
-    #    resources:
-    #      requests:
-    #        storage: ${VOLUME_CAPACITY}
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: ${JENKINS_SERVICE_NAME}
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: ${VOLUME_CAPACITY}
 - apiVersion: v1
   kind: BuildConfig
   metadata:
@@ -141,16 +141,16 @@ objects:
             capabilities: {}
             privileged: false
           terminationMessagePath: /dev/termination-log
-          #          volumeMounts:
-          #          - mountPath: /var/lib/jenkins
-          #            name: ${JENKINS_SERVICE_NAME}-data
+                    volumeMounts:
+                    - mountPath: /var/lib/jenkins
+                      name: ${JENKINS_SERVICE_NAME}-data
         dnsPolicy: ClusterFirst
         restartPolicy: Always
         serviceAccountName: ${JENKINS_SERVICE_NAME}
-        #        volumes:
-        #        - name: ${JENKINS_SERVICE_NAME}-data
-        #          persistentVolumeClaim:
-        #            claimName: ${JENKINS_SERVICE_NAME}
+                volumes:
+                - name: ${JENKINS_SERVICE_NAME}-data
+                  persistentVolumeClaim:
+                    claimName: ${JENKINS_SERVICE_NAME}
     triggers:
     - imageChangeParams:
         automatic: true
@@ -231,11 +231,11 @@ parameters:
   displayName: Memory Limit
   name: MEMORY_LIMIT
   value: 1Gi
-  #- description: Volume space available for data, e.g. 512Mi, 2Gi.
-  #  displayName: Volume Capacity
-  #  name: VOLUME_CAPACITY
-  #  required: true
-  #  value: 1Gi
+  - description: Volume space available for data, e.g. 512Mi, 2Gi.
+    displayName: Volume Capacity
+    name: VOLUME_CAPACITY
+    required: true
+    value: 1Gi
 - description: The OpenShift Namespace where the Jenkins ImageStream resides. (Make sure this matches your project or you will get generic jenkins)
   displayName: Jenkins ImageStream Namespace
   name: NAMESPACE
